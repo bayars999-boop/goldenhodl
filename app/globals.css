@@ -19,8 +19,135 @@
   }
 }
 
+html[data-theme="light"] {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+body[data-theme="light"] {
+  --background: #ffffff;
+  --foreground: #171717;
+  background: #ffffff !important;
+  color: #171717 !important;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+body[data-theme="dark"] {
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  background: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+body[data-theme="dark"] > div {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+body[data-theme="dark"] > div > div {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+}
+
+body[data-theme="dark"] > div h1,
+body[data-theme="dark"] > div h2,
+body[data-theme="dark"] > div h3,
+body[data-theme="dark"] > div p,
+body[data-theme="dark"] > div span,
+body[data-theme="dark"] > div label {
+  color: #f8fafc !important;
+}
+
+body[data-theme="dark"] > div input,
+body[data-theme="dark"] > div select,
+body[data-theme="dark"] > div button:not([aria-label*="mode"]) {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: #64748b !important;
+}
+
+body[data-theme="dark"] .dashboard-shell {
+  background: #0b1220 !important;
+  color: #e2e8f0 !important;
+}
+
+body[data-theme="dark"] .dashboard-card,
+body[data-theme="dark"] .dashboard-card [style*="#ffffff"],
+body[data-theme="dark"] .dashboard-card [style*="#fff"],
+body[data-theme="dark"] .dashboard-card [style*="#f8fafc"] {
+  background: #162033 !important;
+  border-color: #334155 !important;
+}
+
+body[data-theme="dark"] .dashboard-card [style*="#1e293b"],
+body[data-theme="dark"] .dashboard-card [style*="#475569"],
+body[data-theme="dark"] .dashboard-card [style*="#64748b"],
+body[data-theme="dark"] .dashboard-card [style*="#94a3b8"] {
+  color: #cbd5e1 !important;
+}
+
+body[data-theme="dark"] .dashboard-card [style*="borderBottom: '1px solid #e2e8f0'"],
+body[data-theme="dark"] .dashboard-card [style*="borderBottom: '1px solid #f1f5f9'"],
+body[data-theme="dark"] .dashboard-card [style*="border: '1px solid #e2e8f0'"],
+body[data-theme="dark"] .dashboard-card [style*="border: '1px solid #cbd5e1'"] {
+  border-color: #334155 !important;
+}
+
+body[data-theme="dark"] .dashboard-card svg line[stroke="#f1f5f9"] {
+  stroke: #334155 !important;
+}
+
+body[data-theme="dark"] .dashboard-card svg text[fill="#1e293b"] {
+  fill: #f8fafc !important;
+}
+
+body[data-theme="dark"] .dashboard-card svg rect[fill="#fff"] {
+  fill: #1e293b !important;
+  stroke: #64748b !important;
+}
+
+body[data-theme="dark"] .dashboard-card [style*="background: rgb(255, 255, 255)"],
+body[data-theme="dark"] .dashboard-card [style*="background: rgb(255, 255, 255);"] {
+  background: #1e293b !important;
+}
+
+body[data-theme="dark"] .dashboard-card [style*="background: rgb(248, 250, 252)"] {
+  background: #0f172a !important;
+}
+
+body[data-theme="dark"] .dashboard-card [style*="color: rgb(30, 41, 59)"],
+body[data-theme="dark"] .dashboard-card [style*="color: rgb(71, 85, 105)"],
+body[data-theme="dark"] .dashboard-card [style*="color: rgb(100, 116, 139)"],
+body[data-theme="dark"] .dashboard-card [style*="color: rgb(148, 163, 184)"] {
+  color: #cbd5e1 !important;
+}
+
+body[data-theme="dark"] .dashboard-card [style*="border: 1px solid rgb(226, 232, 240)"],
+body[data-theme="dark"] .dashboard-card [style*="border: 1px solid rgb(203, 213, 225)"],
+body[data-theme="dark"] .dashboard-card [style*="border-bottom: 1px solid rgb(241, 245, 249)"] {
+  border-color: #475569 !important;
+}
+
+body[data-theme="dark"] .dashboard-card [style*="color: rgb(136, 19, 55)"],
+body[data-theme="dark"] .dashboard-card [style*="color: rgb(163, 42, 42)"] {
+  color: #fb7185 !important;
+  font-weight: 700 !important;
+}
+
+body[data-theme="dark"] .dashboard-card [style*="background: rgb(136, 19, 55)"],
+body[data-theme="dark"] .dashboard-card [style*="background: rgb(163, 42, 42)"] {
+  background: #f87171 !important;
+}
+
+body[data-theme="dark"] .dashboard-card svg [stroke="#a32a2a"] {
+  stroke: #f87171 !important;
+}
+
+body[data-theme="dark"] .dashboard-card svg [fill="#a32a2a"] {
+  fill: #f87171 !important;
 }
