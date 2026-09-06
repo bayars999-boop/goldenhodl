@@ -3,11 +3,20 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useTheme } from './theme-provider';
 
+const formatMoney = (value: number | string | null | undefined) =>
+  new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(Number(value ?? 0));
+
 export default function Mql5SignalDashboard() {
   const { theme } = useTheme();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [registeredCountry, setRegisteredCountry] = useState('');
   const [activeTab, setActiveTab] = useState('Users');
   const [chartType, setChartType] = useState<'Growth' | 'Balance'>('Growth');
   const [riskChartMode, setRiskChartMode] = useState<'Deposit load' | 'Drawdown'>('Deposit load');
@@ -17,6 +26,38 @@ export default function Mql5SignalDashboard() {
   const riskSvgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
+    const syncRegisteredCountry = () => {
+      const savedProfile = window.localStorage.getItem('goldmaster-profile');
+      if (!savedProfile) {
+        setRegisteredCountry('');
+        return;
+      }
+      try {
+        const profile = JSON.parse(savedProfile) as { country?: unknown };
+        setRegisteredCountry(typeof profile.country === 'string' ? profile.country : '');
+      } catch {
+        setRegisteredCountry('');
+      }
+    };
+    syncRegisteredCountry();
+    window.addEventListener('storage', syncRegisteredCountry);
+    window.addEventListener('goldmaster-profile-updated', syncRegisteredCountry);
+    return () => {
+      window.removeEventListener('storage', syncRegisteredCountry);
+      window.removeEventListener('goldmaster-profile-updated', syncRegisteredCountry);
+    };
+  }, []);
+
+  useEffect(() => {
+    const savedProfile = window.localStorage.getItem('goldmaster-profile');
+    if (savedProfile) {
+      try {
+        const profile = JSON.parse(savedProfile) as { country?: string };
+        if (profile.country) setRegisteredCountry(profile.country);
+      } catch {
+        window.localStorage.removeItem('goldmaster-profile');
+      }
+    }
     fetch('/api/trading-data')
       .then(async res => {
         const text = await res.text();
@@ -62,21 +103,60 @@ export default function Mql5SignalDashboard() {
   const stats = data?.statisticsSummary || {};
   const risks = data?.risksData || {};
   const subscriptions = data?.subscriptionsData || { periods: [] };
-  const mapMarkers = [
-    { label: 'USA (Richard)', country: 'United States', latitude: 38.8951, longitude: -77.0364 },
-    { label: 'Germany (Hans)', country: 'Germany', latitude: 52.5200, longitude: 13.4050 },
-    { label: 'Japan (Kenji)', country: 'Japan', latitude: 35.6762, longitude: 139.6503 },
-    { label: 'Brazil (Lucas)', country: 'Brazil', latitude: -15.7939, longitude: -47.8828 },
-    { label: 'South Africa (Liam)', country: 'South Africa', latitude: -25.7461, longitude: 28.1881 },
-  ];
+  const countryCenters: Record<string, { latitude: number; longitude: number }> = {
+    mongolia: { latitude: 46.8625, longitude: 103.8467 },
+    'united states': { latitude: 39.8283, longitude: -98.5795 },
+    usa: { latitude: 39.8283, longitude: -98.5795 },
+    'u.s.': { latitude: 39.8283, longitude: -98.5795 },
+    germany: { latitude: 51.1657, longitude: 10.4515 },
+    japan: { latitude: 36.2048, longitude: 138.2529 },
+    brazil: { latitude: -14.235, longitude: -51.9253 },
+    'south africa': { latitude: -30.5595, longitude: 22.9375 },
+    canada: { latitude: 56.1304, longitude: -106.3468 },
+    australia: { latitude: -25.2744, longitude: 133.7751 },
+    uk: { latitude: 55.3781, longitude: -3.436 },
+    'united kingdom': { latitude: 55.3781, longitude: -3.436 },
+    france: { latitude: 46.2276, longitude: 2.2137 },
+  };
 
-  // The map asset uses a regular equirectangular 950 x 620 projection.
+  const normalizeGeoKey = (value: string) => value
+    .toLowerCase()
+    .replace(/[^a-z\s]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  const resolveGeoPoint = (countryName: string) => {
+    const normalized = normalizeGeoKey(countryName || 'Mongolia');
+    const aliases: Record<string, string> = {
+      us: 'united states',
+      'united states of america': 'united states',
+      'southafrica': 'south africa',
+      mongolian: 'mongolia',
+      'монгол': 'mongolia',
+      'монгол улс': 'mongolia',
+    };
+
+    const key = aliases[normalized] || normalized;
+    return countryCenters[key] || countryCenters.mongolia;
+  };
+
+  const mapMarkers = [
+    { label: 'Richard', country: 'United States' },
+    { label: 'Hans', country: 'Germany' },
+    { label: 'Kenji', country: 'Japan' },
+    { label: 'Lucas', country: 'Brazil' },
+    { label: 'Liam', country: 'South Africa' },
+  ].map((marker) => ({ ...marker, ...resolveGeoPoint(marker.country) }));
+
+  const MAP_WIDTH = 950;
+  const MAP_HEIGHT = 620;
   const toMapPoint = (latitude: number, longitude: number) => ({
-    x: ((longitude + 180) / 360) * 950,
-    y: ((90 - latitude) / 180) * 620,
+    x: Math.min(Math.max(((longitude + 180) / 360) * MAP_WIDTH, 0), MAP_WIDTH),
+    y: Math.min(Math.max(((90 - latitude) / 180) * MAP_HEIGHT, 0), MAP_HEIGHT),
   });
-  const mongoliaMapPoint = toMapPoint(46.8625, 103.8467);
-  const mongoliaCenter = { x: mongoliaMapPoint.x - 25, y: mongoliaMapPoint.y + 20 };
+
+  const registeredCenter = resolveGeoPoint(registeredCountry || 'Mongolia');
+  const registeredMapPoint = toMapPoint(registeredCenter.latitude, registeredCenter.longitude);
 
   const chartHistory = data?.chartHistory && data.chartHistory.length > 0 
     ? data.chartHistory 
@@ -311,10 +391,10 @@ export default function Mql5SignalDashboard() {
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#64748b', marginBottom: '2px' }}>
-                  <span>Withdrawals</span><span>${withdrawals.toFixed(2)} USD</span>
+                  <span>Withdrawals</span><span>{formatMoney(withdrawals)} USD</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#64748b', marginBottom: '8px' }}>
-                  <span>Deposits</span><span>${deposits.toFixed(2)} USD</span>
+                  <span>Deposits</span><span>{formatMoney(deposits)} USD</span>
                 </div>
 
               </div>
@@ -370,9 +450,9 @@ export default function Mql5SignalDashboard() {
                       <td style={{ padding: '6px' }}>{pos.stopLoss}</td>
                       <td style={{ padding: '6px' }}>{pos.takeProfit}</td>
                       <td style={{ padding: '6px' }}>{pos.currentPrice}</td>
-                      <td style={{ padding: '6px' }}>{Number(pos.swap).toFixed(2)}</td>
+                      <td style={{ padding: '6px' }}>{formatMoney(pos.swap)}</td>
                       <td style={{ padding: '6px', textAlign: 'right', color: pos.profit >= 0 ? '#16a34a' : '#881337' }}>
-                        {Number(pos.profit).toFixed(2)}
+                        {formatMoney(pos.profit)}
                       </td>
                     </tr>
                   ))}
@@ -401,7 +481,7 @@ export default function Mql5SignalDashboard() {
                       <g key={idx}>
                         <line x1={paddingX} y1={y} x2={svgWidth - paddingX} y2={y} stroke="#f1f5f9" strokeWidth="1" />
                         <text x={paddingX - 8} y={y + 4} fill="#94a3b8" fontSize="10" textAnchor="end">
-                          {chartType === 'Growth' ? `${val.toFixed(2)}%` : `$${val.toFixed(0)}`}
+                          {chartType === 'Growth' ? `${val.toFixed(2)}%` : formatMoney(val)}
                         </text>
                       </g>
                     );
@@ -446,10 +526,10 @@ export default function Mql5SignalDashboard() {
                       <td style={{ padding: '6px' }}>{h.openPrice || ''}</td>
                       <td style={{ padding: '6px', color: '#64748b' }}>{h.closeTime}</td>
                       <td style={{ padding: '6px' }}>{isDeal ? h.closePrice : ''}</td>
-                      <td style={{ padding: '6px' }}>{h.commission ? h.commission.toFixed(2) : ''}</td>
-                      <td style={{ padding: '6px' }}>{h.swap ? h.swap.toFixed(2) : ''}</td>
+                      <td style={{ padding: '6px' }}>{h.commission ? formatMoney(h.commission) : ''}</td>
+                      <td style={{ padding: '6px' }}>{h.swap ? formatMoney(h.swap) : ''}</td>
                       <td style={{ padding: '6px', textAlign: 'right', color: h.profit >= 0 ? '#16a34a' : '#881337' }}>
-                        {h.profit !== undefined && h.profit !== null ? Number(h.profit).toFixed(2) : ''}
+                        {h.profit !== undefined && h.profit !== null ? formatMoney(h.profit) : ''}
                       </td>
                     </tr>
                   );
@@ -777,7 +857,7 @@ export default function Mql5SignalDashboard() {
               <svg
                 viewBox="0 0 950 620"
                 preserveAspectRatio="xMidYMid meet"
-                style={{ display: 'block', width: '100%', maxWidth: '850px', height: 'auto' }}
+                style={{ display: 'block', width: '100%', maxWidth: '850px', height: 'auto', aspectRatio: '950 / 620' }}
               >
                 <image
                   href="/world-map.svg"
@@ -785,11 +865,11 @@ export default function Mql5SignalDashboard() {
                   y="0"
                   width="950"
                   height="620"
-                  preserveAspectRatio="none"
+                  preserveAspectRatio="xMidYMid meet"
                   opacity="0.75"
                   style={{ filter: 'invert(90%) sepia(12%) saturate(260%) hue-rotate(75deg) brightness(108%) contrast(82%)' }}
                 />
-                <g transform={`translate(${mongoliaCenter.x}, ${mongoliaCenter.y})`} opacity="0.175" fill="none" stroke="#bbf7d0" strokeWidth="3">
+                <g transform={`translate(${registeredMapPoint.x}, ${registeredMapPoint.y})`} opacity="0.175" fill="none" stroke={theme === 'light' ? '#a8e6b9' : '#bbf7d0'} strokeWidth="3">
                   <circle r="7" fill="#dcfce7" stroke="#86efac" strokeWidth="2">
                     <animate attributeName="r" from="7" to="900" dur="7s" repeatCount="indefinite" />
                     <animate attributeName="opacity" from="0.8" to="0" dur="7s" repeatCount="indefinite" />
@@ -798,15 +878,20 @@ export default function Mql5SignalDashboard() {
                     <animate attributeName="r" from="7" to="900" dur="7s" begin="2.3s" repeatCount="indefinite" />
                     <animate attributeName="opacity" from="0.8" to="0" dur="7s" begin="2.3s" repeatCount="indefinite" />
                   </circle>
-                  <circle r="5" fill="#86efac" stroke="#f0fdf4" strokeWidth="2" />
+                  <circle r="5" fill={theme === 'light' ? '#72d48f' : '#86efac'} stroke={theme === 'light' ? '#d5f5df' : '#f0fdf4'} strokeWidth="2" />
+                </g>
+                <g transform={`translate(${registeredMapPoint.x}, ${registeredMapPoint.y})`}>
+                  <circle r="10" fill="#0284c7" opacity="0.25" />
+                  <circle r="4" fill="#0284c7" stroke="#fff" strokeWidth="1.5" />
+                  <text x="0" y="-8" fill="#0284c7" fontSize="7" fontWeight="bold" textAnchor="middle">You</text>
                 </g>
                 {mapMarkers.map(({ label, latitude, longitude }) => {
                   const { x, y } = toMapPoint(latitude, longitude);
                   return (
                   <g key={label} transform={`translate(${x}, ${y})`}>
-                    <circle cx="0" cy="0" r="14" fill="#0284c7" opacity="0.25" />
-                    <circle cx="0" cy="0" r="6" fill="#0284c7" stroke="#fff" strokeWidth="2" />
-                    <text x="0" y="-12" fill="#0284c7" fontSize="10" fontWeight="bold" textAnchor="middle">{label}</text>
+                    <circle cx="0" cy="0" r="10" fill="#0284c7" opacity="0.25" />
+                    <circle cx="0" cy="0" r="4" fill="#0284c7" stroke="#fff" strokeWidth="1.5" />
+                    <text x="0" y="-8" fill="#0284c7" fontSize="7" fontWeight="bold" textAnchor="middle">{label}</text>
                   </g>
                   );
                 })}
