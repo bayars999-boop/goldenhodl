@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "./theme-provider";
+import LegalFooter from "./legal-footer";
+import CookieConsent, { ConsentTrackers } from "./cookie-consent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body suppressHydrationWarning className="min-h-full flex flex-col">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider><div className="site-content">{children}</div><LegalFooter /><CookieConsent /><ConsentTrackers /></ThemeProvider>
       </body>
     </html>
   );

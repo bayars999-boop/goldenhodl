@@ -131,7 +131,7 @@ export async function GET() {
 
     return NextResponse.json({
       name: "Result of GoldMaster Expert Advisor",
-      author: "Bayarsaikhan Janchiv",
+      author: "BJ",
       country: "mn",
       rating: 5,
       reviewsCount: 0,
@@ -286,7 +286,7 @@ function getRealTradingData() {
 
   return {
     name: "Result of GoldMaster Expert Advisor",
-    author: "Bayarsaikhan Janchiv",
+    author: "BJ",
     country: "mn",
     rating: 5,
     reviewsCount: 0,
@@ -416,7 +416,7 @@ function getRealTradingData() {
         { month: "Nov 2025", count: 0, income: 0 },
         { month: "Dec 2025", count: 0, income: 0 },
         { month: "Jan 2026", count: 0, income: 0 },
-        { month: "Feb 2026", code: 0, income: 0 },
+        { month: "Feb 2026", count: 0, income: 0 },
         { month: "Mar 2026", count: 0, income: 0 },
         { month: "Apr 2026", count: 0, income: 0 },
         { month: "May 2026", count: 0, income: 0 },

@@ -6,9 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check:privacy-matrix": "node scripts/check-privacy-matrix.mjs",
+    "check:data-location": "node scripts/check-data-location.mjs",
+    "check:security-controls": "node scripts/check-security-controls.mjs",
+    "ci": "npm run check:privacy-matrix && npm run check:data-location && npm run check:security-controls && npm run lint && npm run build"
   },
   "dependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0",
     "next": "16.3.4",
     "react": "19.2.8",
     "react-dom": "19.2.8"

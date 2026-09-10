@@ -26,38 +26,6 @@ export default function Mql5SignalDashboard() {
   const riskSvgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
-    const syncRegisteredCountry = () => {
-      const savedProfile = window.localStorage.getItem('goldmaster-profile');
-      if (!savedProfile) {
-        setRegisteredCountry('');
-        return;
-      }
-      try {
-        const profile = JSON.parse(savedProfile) as { country?: unknown };
-        setRegisteredCountry(typeof profile.country === 'string' ? profile.country : '');
-      } catch {
-        setRegisteredCountry('');
-      }
-    };
-    syncRegisteredCountry();
-    window.addEventListener('storage', syncRegisteredCountry);
-    window.addEventListener('goldmaster-profile-updated', syncRegisteredCountry);
-    return () => {
-      window.removeEventListener('storage', syncRegisteredCountry);
-      window.removeEventListener('goldmaster-profile-updated', syncRegisteredCountry);
-    };
-  }, []);
-
-  useEffect(() => {
-    const savedProfile = window.localStorage.getItem('goldmaster-profile');
-    if (savedProfile) {
-      try {
-        const profile = JSON.parse(savedProfile) as { country?: string };
-        if (profile.country) setRegisteredCountry(profile.country);
-      } catch {
-        window.localStorage.removeItem('goldmaster-profile');
-      }
-    }
     fetch('/api/trading-data')
       .then(async res => {
         const text = await res.text();
@@ -103,6 +71,7 @@ export default function Mql5SignalDashboard() {
   const stats = data?.statisticsSummary || {};
   const risks = data?.risksData || {};
   const subscriptions = data?.subscriptionsData || { periods: [] };
+
   const countryCenters: Record<string, { latitude: number; longitude: number }> = {
     mongolia: { latitude: 46.8625, longitude: 103.8467 },
     'united states': { latitude: 39.8283, longitude: -98.5795 },
@@ -211,66 +180,13 @@ export default function Mql5SignalDashboard() {
               <span style={{ fontSize: '22px', lineHeight: 1.4 }}>IF YOU WANT LONG TERM STABLE PROFITS, JOIN US.</span>
             </div>
             <div style={{ display: 'flex', gap: '8px' }}>
-              <button type="button" onClick={() => { window.location.href = '/copy-trading'; }} style={{ background: 'transparent', border: '1px solid #16a34a', color: '#16a34a', padding: '8px 18px', borderRadius: '4px', fontWeight: 600 }}>Sign in</button>
+              <button type="button" onClick={() => { window.location.href = '/signin'; }} style={{ background: 'transparent', border: '1px solid #16a34a', color: '#16a34a', padding: '8px 18px', borderRadius: '4px', fontWeight: 600 }}>Sign in</button>
               <button type="button" onClick={() => { window.location.href = '/login'; }} style={{ background: '#16a34a', border: '1px solid #16a34a', color: '#fff', padding: '8px 18px', borderRadius: '4px', fontWeight: 600 }}>Log in</button>
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flexWrap: 'wrap', marginTop: '26px' }}>
-            <strong style={{ flexBasis: '100%', fontSize: '18px' }}>Result of GoldMaster Expert Advisor</strong>                        <img src="/mongolia-flag.png" alt="Mongolian flag" style={{ width: '32px', height: '18px', objectFit: 'contain', borderRadius: '2px' }} />
-            <span style={{ color: theme === 'dark' ? '#cbd5e1' : '#475569' }}>Owner: {data?.author || 'Bayarsaikhan Janchiv'}</span><span style={{ color: '#eab308', fontSize: '16px' }}>★★★★★</span><span style={{ color: theme === 'dark' ? '#cbd5e1' : '#64748b', fontSize: '12px' }}>5 reviews</span><span style={{ color: '#16a34a', fontSize: '12px' }}>■■■ Reliability</span><span style={{ color: '#16a34a', fontSize: '12px' }}>1 week</span><span style={{ color: theme === 'dark' ? '#cbd5e1' : '#64748b', fontSize: '12px' }}>👥 0 / 0 USD</span>
-          </div>
-        </div>
-        {/* Top Header Row */}
-        <div style={{ display: 'none' }}>
-          <div style={{ position: 'relative', display: 'flex', gap: '15px', alignItems: 'center', flexWrap: 'wrap', paddingTop: '68px' }}>
-            <img src="/goldmaster-logo.png" alt="GoldMaster logo" style={{ position: 'absolute', top: 0, left: 0, width: '87px', height: '87px', objectFit: 'contain' }} />
-            <span style={{ position: 'absolute', top: '68px', left: 0, fontSize: '15px', fontWeight: 'bold', color: '#0284c7' }}>
-              Result of GoldMaster Expert Advisor
-            </span>
-            <div style={{ position: 'absolute', top: 0, left: '75px', maxWidth: '430px', fontSize: '15px', lineHeight: '1.55', textAlign: 'right', color: '#64748b' }}>
-              <div>IF YOU WANT LONG TERM STABLE PROFITS, JOIN US.</div>
-              <div>If you want to get rich quickly, close this window right now and forget about us.</div>
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '22px', height: '15px', borderRadius: '2px', overflow: 'hidden', border: '1px solid #cbd5e1' }} title="Mongolia">
-              <svg viewBox="0 0 900 600" style={{ width: '100%', height: '100%', objectFit: 'cover' }}>
-                <rect width="300" height="600" fill="#DA2013" />
-                <rect x="300" width="300" height="600" fill="#0066B3" />
-                <rect x="600" width="300" height="600" fill="#DA2013" />
-                <g transform="translate(120, 120) scale(0.8)">
-                  <path d="M50 0 L75 35 L25 35 Z" fill="#FFCC00" />
-                  <rect x="35" y="45" width="30" height="150" fill="#FFCC00" />
-                  <circle cx="50" cy="230" r="15" fill="#FFCC00" />
-                </g>
-              </svg>
-            </div>
-
-            <span style={{ fontSize: '13px', color: '#475569', fontWeight: 'normal' }}>
-              Owner: {data?.author || 'Bayarsaikhan Janchiv'}
-            </span>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '2px', color: '#eab308' }}>
-              {[...Array(5)].map((_, i) => (
-                <svg key={i} style={{ width: '13px', height: '13px', fill: 'currentColor' }} viewBox="0 0 24 24">
-                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                </svg>
-              ))}
-              <span style={{ fontSize: '12px', color: '#94a3b8', marginLeft: '4px' }}>5 reviews</span>
-            </div>
-
-            <span style={{ fontSize: '12px', color: '#16a34a' }}>■■■ Reliability</span>
-            <span style={{ fontSize: '12px', color: '#16a34a' }}>1 week</span>
-            <span style={{ fontSize: '12px', color: '#64748b' }}>👥 0 / 0 USD</span>
-          </div>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <button
-              type="button"
-              onClick={() => { window.location.href = '/copy-trading'; }}
-              style={{ background: '#ffffff', border: '1px solid #16a34a', color: '#16a34a', padding: '6px 14px', minWidth: '78px', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', fontWeight: 600 }}
-            >
-              Sign in
-            </button>
-            <button type="button" onClick={() => { window.location.href = '/login'; }} style={{ background: '#16a34a', border: '1px solid #16a34a', color: '#ffffff', padding: '6px 14px', minWidth: '78px', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', fontWeight: 600 }}>Log in</button>
+            <strong style={{ flexBasis: '100%', fontSize: '18px' }}>{data?.name || 'Result of GoldMaster Expert Advisor'}</strong>                        <img src="/mongolia-flag.png" alt="Mongolian flag" style={{ width: '32px', height: '18px', objectFit: 'contain', borderRadius: '2px' }} />
+            <span style={{ color: theme === 'dark' ? '#cbd5e1' : '#475569' }}>Owner: {data?.author || 'BJ Janchiv'}</span><span style={{ color: '#eab308', fontSize: '16px' }}>★★★★★</span><span style={{ color: theme === 'dark' ? '#cbd5e1' : '#64748b', fontSize: '12px' }}>{data?.reviewsCount ?? 0} reviews</span><span style={{ color: '#16a34a', fontSize: '12px' }}>■■■ Reliability</span><span style={{ color: '#16a34a', fontSize: '12px' }}>{data?.reliability || '1 week'}</span><span style={{ color: theme === 'dark' ? '#cbd5e1' : '#64748b', fontSize: '12px' }}>👥 {data?.subscribersCount || '0 / 0 USD'}</span>
           </div>
         </div>
 
@@ -310,8 +226,8 @@ export default function Mql5SignalDashboard() {
               }}>
                 {weeklyData.map((w: any, idx: number) => {
                   const hasData = w.change !== null && w.change !== 0;
-                  const maxVal = Math.max(...weeklyData.map((d: any) => Math.abs(d.change || 0)), 1);
-                  const barHeight = hasData ? Math.min(Math.max((Math.abs(w.change) / maxVal) * 26, 3), 26) : 0;
+                  const maxWeeklyVal = Math.max(...weeklyData.map((d: any) => Math.abs(d.change || 0)), 1);
+                  const barHeight = hasData ? Math.min(Math.max((Math.abs(w.change) / maxWeeklyVal) * 26, 3), 26) : 0;
                   const isPositive = (w.change || 0) >= 0;
                   
                   return (
@@ -396,7 +312,6 @@ export default function Mql5SignalDashboard() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#64748b', marginBottom: '8px' }}>
                   <span>Deposits</span><span>{formatMoney(deposits)} USD</span>
                 </div>
-
               </div>
             );
           })()}
@@ -539,20 +454,20 @@ export default function Mql5SignalDashboard() {
           </div>
         )}
 
-        {/* STATISTICS TAB */}
+        {/* STATISTICS TAB (Safely guarded against missing properties) */}
         {activeTab === 'Statistics' && (
           <div style={{ fontSize: '12px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '20px' }}>
               <div>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <tbody>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Trades</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats.trades}</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Profit trades (%):</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#16a34a' }}>{stats.profitTradesCount} ({stats.profitTradesPercent}%)</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Loss trades (%):</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#881337' }}>{stats.lossTradesCount} ({stats.lossTradesPercent}%)</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Best trade:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#16a34a' }}>{stats.bestTrade} USD</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Worst trade:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#881337' }}>{stats.worstTrade} USD</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Gross profit:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#16a34a' }}>{stats.grossProfit} ({stats.grossProfitPips} pips)</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Gross loss:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#881337' }}>{stats.grossLoss} ({stats.grossLossPips} pips)</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Trades</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.trades ?? 0}</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Profit trades (%):</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#16a34a' }}>{stats?.profitTradesCount ?? 0} ({stats?.profitTradesPercent ?? 0}%)</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Loss trades (%):</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#881337' }}>{stats?.lossTradesCount ?? 0} ({stats?.lossTradesPercent ?? 0}%)</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Best trade:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#16a34a' }}>{stats?.bestTrade ?? 0} USD</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Worst trade:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#881337' }}>{stats?.worstTrade ?? 0} USD</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Gross profit:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#16a34a' }}>{stats?.grossProfit ?? 0} ({stats?.grossProfitPips ?? 0} pips)</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Gross loss:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#881337' }}>{stats?.grossLoss ?? 0} ({stats?.grossLossPips ?? 0} pips)</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -560,13 +475,13 @@ export default function Mql5SignalDashboard() {
               <div>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <tbody>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Max consecutive wins:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats.maxConsecutiveWins} ({stats.maxConsecutiveWinsUsd} USD)</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Max consecutive losses:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats.maxConsecutiveLosses} ({stats.maxConsecutiveLossesUsd} USD)</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Recovery factor:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats.recoveryFactor}</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Sharpe ratio:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#0284c7', fontWeight: 'bold' }}>{stats.sharpeRatio}</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Profit factor:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats.profitFactor}</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Expected payoff:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats.expectedPayoff}</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Monthly growth:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#16a34a' }}>{stats.monthlyGrowth}%</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Max consecutive wins:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.maxConsecutiveWins ?? 0} ({stats?.maxConsecutiveWinsUsd ?? 0} USD)</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Max consecutive losses:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.maxConsecutiveLosses ?? 0} ({stats?.maxConsecutiveLossesUsd ?? 0} USD)</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Recovery factor:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.recoveryFactor ?? 0}</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Sharpe ratio:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#0284c7', fontWeight: 'bold' }}>{stats?.sharpeRatio ?? 0}</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Profit factor:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.profitFactor ?? 0}</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Expected payoff:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.expectedPayoff ?? 0}</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Monthly growth:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#16a34a' }}>{stats?.monthlyGrowth ?? 0}%</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -574,12 +489,12 @@ export default function Mql5SignalDashboard() {
               <div>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <tbody>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Trading activity:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats.tradingActivity}%</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Algo trading:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats.algoTrading}%</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Max deposit load:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats.maxDepositLoad}%</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Latest trade:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats.latestTrade}</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Trades per week:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats.tradesPerWeek}</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Average holding time:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats.avgHoldingTime}</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Trading activity:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.tradingActivity ?? 0}%</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Algo trading:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.algoTrading ?? 0}%</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Max deposit load:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.maxDepositLoad ?? 0}%</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Latest trade:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.latestTrade ?? '-'}</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Trades per week:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.tradesPerWeek ?? 0}</td></tr>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Average holding time:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.avgHoldingTime ?? '-'}</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -587,7 +502,7 @@ export default function Mql5SignalDashboard() {
           </div>
         )}
 
-        {/* RISKS TAB */}
+        {/* RISKS TAB (Safely guarded against undefined/null properties) */}
         {activeTab === 'Risks' && (
           <div style={{ fontSize: '12px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
@@ -629,11 +544,11 @@ export default function Mql5SignalDashboard() {
 
             <div style={{ border: '1px solid #e2e8f0', padding: '12px', borderRadius: '4px', background: '#fff', marginBottom: '25px', position: 'relative' }}>
               {(() => {
-                const historyList = riskChartMode === 'Deposit load' ? risks.depositLoadHistory : risks.drawdownHistory;
+                const historyList = (riskChartMode === 'Deposit load' ? risks?.depositLoadHistory : risks?.drawdownHistory) || [];
                 const metricKey = riskChartMode === 'Deposit load' ? 'load' : 'drawdown';
-                const maxMetric = Math.max(...historyList.map((item: any) => item[metricKey]), 10);
-                const minBalance = Math.min(...historyList.map((item: any) => item.balance), initialDeposit * 0.9);
-                const maxBalance = Math.max(...historyList.map((item: any) => item.balance), initialDeposit * 1.1);
+                const maxMetric = historyList.length > 0 ? Math.max(...historyList.map((item: any) => item?.[metricKey] ?? 0), 10) : 10;
+                const minBalance = historyList.length > 0 ? Math.min(...historyList.map((item: any) => item?.balance ?? initialDeposit), initialDeposit * 0.9) : initialDeposit * 0.9;
+                const maxBalance = historyList.length > 0 ? Math.max(...historyList.map((item: any) => item?.balance ?? initialDeposit), initialDeposit * 1.1) : initialDeposit * 1.1;
 
                 return (
                   <svg ref={riskSvgRef} viewBox={`0 0 ${svgWidth} ${svgHeight}`} style={{ width: '100%', height: '180px', overflow: 'visible' }}>
@@ -657,13 +572,13 @@ export default function Mql5SignalDashboard() {
                       fill="none" 
                       stroke="#0284c7" 
                       strokeWidth="1.5" 
-                      points={historyList.map((item: any, idx: number) => `${getX(idx, historyList.length, svgWidth)},${getY(item.balance, minBalance, maxBalance, svgHeight)}`).join(' ')} 
+                      points={historyList.map((item: any, idx: number) => `${getX(idx, historyList.length, svgWidth)},${getY(item?.balance ?? 0, minBalance, maxBalance, svgHeight)}`).join(' ')} 
                     />
                     <polyline 
                       fill="none" 
                       stroke="#334155" 
                       strokeWidth="1.5" 
-                      points={historyList.map((item: any, idx: number) => `${getX(idx, historyList.length, svgWidth)},${getY(item[metricKey], 0, maxMetric, svgHeight)}`).join(' ')} 
+                      points={historyList.map((item: any, idx: number) => `${getX(idx, historyList.length, svgWidth)},${getY(item?.[metricKey] ?? 0, 0, maxMetric, svgHeight)}`).join(' ')} 
                     />
                   </svg>
                 );
@@ -675,21 +590,21 @@ export default function Mql5SignalDashboard() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', marginBottom: '20px' }}>
               <div>
-                <div style={{ fontSize: '12px', color: '#1e293b', marginBottom: '4px' }}>Best trade: +{risks.bestTrade.toFixed(2)} USD</div>
+                <div style={{ fontSize: '12px', color: '#1e293b', marginBottom: '4px' }}>Best trade: +{(risks?.bestTrade ?? 0).toFixed(2)} USD</div>
                 <div style={{ display: 'flex', height: '8px', background: '#e2e8f0', borderRadius: '2px', overflow: 'hidden' }}>
                   <div style={{ width: '65%', background: '#16a34a' }}></div>
                   <div style={{ width: '35%', background: '#fdba74' }}></div>
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: '12px', color: '#1e293b', marginBottom: '4px' }}>Maximum consecutive wins: {risks.maxConsecutiveWins}</div>
+                <div style={{ fontSize: '12px', color: '#1e293b', marginBottom: '4px' }}>Maximum consecutive wins: {risks?.maxConsecutiveWins ?? 0}</div>
                 <div style={{ display: 'flex', height: '8px', background: '#e2e8f0', borderRadius: '2px', overflow: 'hidden' }}>
                   <div style={{ width: '70%', background: '#16a34a' }}></div>
                   <div style={{ width: '30%', background: '#fdba74' }}></div>
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: '12px', color: '#1e293b', marginBottom: '4px' }}>Maximal consecutive profit: +{risks.maximalConsecutiveProfit.toFixed(2)} USD</div>
+                <div style={{ fontSize: '12px', color: '#1e293b', marginBottom: '4px' }}>Maximal consecutive profit: +{(risks?.maximalConsecutiveProfit ?? 0).toFixed(2)} USD</div>
                 <div style={{ display: 'flex', height: '8px', background: '#e2e8f0', borderRadius: '2px', overflow: 'hidden' }}>
                   <div style={{ width: '75%', background: '#16a34a' }}></div>
                   <div style={{ width: '25%', background: '#fdba74' }}></div>
@@ -698,33 +613,33 @@ export default function Mql5SignalDashboard() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', marginBottom: '25px', fontSize: '11px', color: '#64748b' }}>
-              <div style={{ textAlign: 'right' }}><span style={{ color: '#881337' }}>Worst trade: {risks.worstTrade.toFixed(2)} USD</span></div>
-              <div style={{ textAlign: 'right' }}><span style={{ color: '#881337' }}>Maximum consecutive losses: {risks.maxConsecutiveLosses}</span></div>
-              <div style={{ textAlign: 'right' }}><span style={{ color: '#881337' }}>Maximal consecutive loss: {risks.maximalConsecutiveLoss.toFixed(2)} USD</span></div>
+              <div style={{ textAlign: 'right' }}><span style={{ color: '#881337' }}>Worst trade: {(risks?.worstTrade ?? 0).toFixed(2)} USD</span></div>
+              <div style={{ textAlign: 'right' }}><span style={{ color: '#881337' }}>Maximum consecutive losses: {risks?.maxConsecutiveLosses ?? 0}</span></div>
+              <div style={{ textAlign: 'right' }}><span style={{ color: '#881337' }}>Maximal consecutive loss: {(risks?.maximalConsecutiveLoss ?? 0).toFixed(2)} USD</span></div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px' }}>
               <div>
-                <div style={{ fontSize: '15px', color: '#1e293b', marginBottom: '2px' }}>{risks.mfeMaxProfit.toFixed(2)} USD</div>
+                <div style={{ fontSize: '15px', color: '#1e293b', marginBottom: '2px' }}>{(risks?.mfeMaxProfit ?? 0).toFixed(2)} USD</div>
                 <div style={{ fontSize: '11px', color: '#64748b' }}>● MFE (Max. Profit)</div>
               </div>
               <div>
-                <div style={{ fontSize: '15px', color: '#1e293b', marginBottom: '2px' }}>{risks.avgProfit.toFixed(2)} USD</div>
+                <div style={{ fontSize: '15px', color: '#1e293b', marginBottom: '2px' }}>{(risks?.avgProfit ?? 0).toFixed(2)} USD</div>
                 <div style={{ fontSize: '11px', color: '#64748b' }}>● Avg. Profit</div>
               </div>
               <div>
-                <div style={{ fontSize: '15px', color: '#881337', marginBottom: '2px' }}>{risks.avgLoss.toFixed(2)} USD</div>
+                <div style={{ fontSize: '15px', color: '#881337', marginBottom: '2px' }}>{(risks?.avgLoss ?? 0).toFixed(2)} USD</div>
                 <div style={{ fontSize: '11px', color: '#64748b' }}>● Avg. Loss</div>
               </div>
               <div>
-                <div style={{ fontSize: '15px', color: '#881337', marginBottom: '2px' }}>{risks.maeMaxDd.toFixed(2)} USD</div>
+                <div style={{ fontSize: '15px', color: '#881337', marginBottom: '2px' }}>{(risks?.maeMaxDd ?? 0).toFixed(2)} USD</div>
                 <div style={{ fontSize: '11px', color: '#64748b' }}>● MAE (Max. DD)</div>
               </div>
             </div>
           </div>
         )}
 
-        {/* USERS TAB */}
+        {/* USERS TAB (Fully dynamic based on subscriptionsData periods instead of hardcoded arrays) */}
         {activeTab === 'Users' && (
           <div style={{ fontSize: '12px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
@@ -759,12 +674,28 @@ export default function Mql5SignalDashboard() {
                     <line key={idx} x1={paddingX} y1={y} x2={svgWidth - paddingX} y2={y} stroke="#f1f5f9" strokeWidth="1" />
                   );
                 })}
-                {/* Dynamic/Mock Subscriptions Count Line Graph & Tooltip */}
                 {(() => {
-                  const subCounts = [0, 0, 0, 0, 0, 0, 0, 1, 3, 5, 8, 12];
-                  const maxSub = 15;
-                  const pts = subCounts.map((val, i) => {
-                    const x = paddingX + (i / (subCounts.length - 1)) * (svgWidth - paddingX * 2);
+                  const periods = (subscriptions?.periods && subscriptions.periods.length > 0) ? subscriptions.periods : [
+                    { month: "Sep 2025", count: 0, income: 0 },
+                    { month: "Oct 2025", count: 0, income: 0 },
+                    { month: "Nov 2025", count: 0, income: 0 },
+                    { month: "Dec 2025", count: 0, income: 0 },
+                    { month: "Jan 2026", count: 0, income: 0 },
+                    { month: "Feb 2026", count: 0, income: 0 },
+                    { month: "Mar 2026", count: 0, income: 0 },
+                    { month: "Apr 2026", count: 0, income: 0 },
+                    { month: "May 2026", count: 0, income: 0 },
+                    { month: "Jun 2026", count: 0, income: 0 },
+                    { month: "Jul 2026", count: 0, income: 0 },
+                    { month: "Aug 2026", count: 0, income: 0 },
+                    { month: "Sep 2026", count: 0, income: 0 }
+                  ];
+
+                  const subCounts = periods.map((p: any) => p?.count ?? 0);
+                  const maxSub = Math.max(...subCounts, 1);
+                  const currentCount = subCounts[subCounts.length - 1] ?? 0;
+                  const pts = subCounts.map((val: number, i: number) => {
+                    const x = paddingX + (i / (subCounts.length - 1 || 1)) * (svgWidth - paddingX * 2);
                     const y = 115 - (val / maxSub) * 100;
                     return `${x},${y}`;
                   }).join(' ');
@@ -772,15 +703,15 @@ export default function Mql5SignalDashboard() {
                   return (
                     <>
                       <polyline fill="none" stroke="#a32a2a" strokeWidth="2" points={pts} />
-                      {subCounts.map((val, i) => {
-                        const x = paddingX + (i / (subCounts.length - 1)) * (svgWidth - paddingX * 2);
+                      {subCounts.map((val: number, i: number) => {
+                        const x = paddingX + (i / (subCounts.length - 1 || 1)) * (svgWidth - paddingX * 2);
                         const y = 115 - (val / maxSub) * 100;
                         return <circle key={i} cx={x} cy={y} r="3" fill="#a32a2a" />;
                       })}
-                      <g transform="translate(360, 25)">
-                        <rect x="0" y="0" width="105" height="18" fill="#fff" stroke="#cbd5e1" rx="2" />
+                      <g transform="translate(350, 25)">
+                        <rect x="0" y="0" width="115" height="18" fill="#fff" stroke="#cbd5e1" rx="2" />
                         <rect x="5" y="6" width="6" height="6" fill="#a32a2a" />
-                        <text x="16" y="12" fill="#1e293b" fontSize="9">Current - 12 Users</text>
+                        <text x="16" y="12" fill="#1e293b" fontSize="9">Current - {currentCount} Users</text>
                       </g>
                     </>
                   );
@@ -788,8 +719,12 @@ export default function Mql5SignalDashboard() {
               </svg>
               
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: '#64748b', marginTop: '4px', paddingLeft: '40px', paddingRight: '40px' }}>
-                {['Sep 2025', 'Oct 2025', 'Nov 2025', 'Dec 2025', 'Jan 2026', 'Feb 2026', 'Mar 2026', 'Apr 2026', 'May 2026', 'Jun 2026', 'Jul 2026', 'Aug 2026'].map((m, i) => (
-                  <span key={i}>{m}</span>
+                {((subscriptions?.periods && subscriptions.periods.length > 0) ? subscriptions.periods : [
+                  { month: "Sep 2025" }, { month: "Oct 2025" }, { month: "Nov 2025" }, { month: "Dec 2025" },
+                  { month: "Jan 2026" }, { month: "Feb 2026" }, { month: "Mar 2026" }, { month: "Apr 2026" },
+                  { month: "May 2026" }, { month: "Jun 2026" }, { month: "Jul 2026" }, { month: "Aug 2026" }, { month: "Sep 2026" }
+                ]).map((p: any, i: number) => (
+                  <span key={i}>{p?.month || ''}</span>
                 ))}
               </div>
             </div>
@@ -809,12 +744,28 @@ export default function Mql5SignalDashboard() {
                     <line key={idx} x1={paddingX} y1={y} x2={svgWidth - paddingX} y2={y} stroke="#f1f5f9" strokeWidth="1" />
                   );
                 })}
-                {/* 10x Increased Income Line Graph with Sharp Upward Growth & Volatility */}
                 {(() => {
-                  const incomeVals = [0, 0, 0, 500, 1800, 1200, 3500, 7500, 11000, 14200, 17500, 18500];
-                  const maxInc = 20000;
-                  const pts = incomeVals.map((val, i) => {
-                    const x = paddingX + (i / (incomeVals.length - 1)) * (svgWidth - paddingX * 2);
+                  const periods = (subscriptions?.periods && subscriptions.periods.length > 0) ? subscriptions.periods : [
+                    { month: "Sep 2025", count: 0, income: 0 },
+                    { month: "Oct 2025", count: 0, income: 0 },
+                    { month: "Nov 2025", count: 0, income: 0 },
+                    { month: "Dec 2025", count: 0, income: 0 },
+                    { month: "Jan 2026", count: 0, income: 0 },
+                    { month: "Feb 2026", count: 0, income: 0 },
+                    { month: "Mar 2026", count: 0, income: 0 },
+                    { month: "Apr 2026", count: 0, income: 0 },
+                    { month: "May 2026", count: 0, income: 0 },
+                    { month: "Jun 2026", count: 0, income: 0 },
+                    { month: "Jul 2026", count: 0, income: 0 },
+                    { month: "Aug 2026", count: 0, income: 0 },
+                    { month: "Sep 2026", count: 0, income: 0 }
+                  ];
+
+                  const incomeVals = periods.map((p: any) => p?.income ?? 0);
+                  const maxInc = Math.max(...incomeVals, 100);
+                  const totalIncome = incomeVals.reduce((acc: number, val: number) => acc + val, 0);
+                  const pts = incomeVals.map((val: number, i: number) => {
+                    const x = paddingX + (i / (incomeVals.length - 1 || 1)) * (svgWidth - paddingX * 2);
                     const y = 115 - (val / maxInc) * 100;
                     return `${x},${y}`;
                   }).join(' ');
@@ -822,15 +773,15 @@ export default function Mql5SignalDashboard() {
                   return (
                     <>
                       <polyline fill="none" stroke="#16a34a" strokeWidth="2.5" points={pts} />
-                      {incomeVals.map((val, i) => {
-                        const x = paddingX + (i / (incomeVals.length - 1)) * (svgWidth - paddingX * 2);
+                      {incomeVals.map((val: number, i: number) => {
+                        const x = paddingX + (i / (incomeVals.length - 1 || 1)) * (svgWidth - paddingX * 2);
                         const y = 115 - (val / maxInc) * 100;
                         return <circle key={i} cx={x} cy={y} r="3.5" fill="#16a34a" />;
                       })}
-                      <g transform="translate(340, 25)">
-                        <rect x="0" y="0" width="125" height="18" fill="#fff" stroke="#cbd5e1" rx="2" />
+                      <g transform="translate(330, 25)">
+                        <rect x="0" y="0" width="135" height="18" fill="#fff" stroke="#cbd5e1" rx="2" />
                         <rect x="5" y="6" width="6" height="6" fill="#16a34a" />
-                        <text x="16" y="12" fill="#1e293b" fontSize="9">Total - $18,500 USD</text>
+                        <text x="16" y="12" fill="#1e293b" fontSize="9">Total - ${totalIncome.toLocaleString()} USD</text>
                       </g>
                     </>
                   );
@@ -838,8 +789,12 @@ export default function Mql5SignalDashboard() {
               </svg>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: '#64748b', marginTop: '4px', paddingLeft: '40px', paddingRight: '40px' }}>
-                {['Sep 2025', 'Oct 2025', 'Nov 2025', 'Dec 2025', 'Jan 2026', 'Feb 2026', 'Mar 2026', 'Apr 2026', 'May 2026', 'Jun 2026', 'Jul 2026', 'Aug 2026'].map((m, i) => (
-                  <span key={i}>{m}</span>
+                {((subscriptions?.periods && subscriptions.periods.length > 0) ? subscriptions.periods : [
+                  { month: "Sep 2025" }, { month: "Oct 2025" }, { month: "Nov 2025" }, { month: "Dec 2025" },
+                  { month: "Jan 2026" }, { month: "Feb 2026" }, { month: "Mar 2026" }, { month: "Apr 2026" },
+                  { month: "May 2026" }, { month: "Jun 2026" }, { month: "Jul 2026" }, { month: "Aug 2026" }, { month: "Sep 2026" }
+                ]).map((p: any, i: number) => (
+                  <span key={i}>{p?.month || ''}</span>
                 ))}
               </div>
             </div>
@@ -852,7 +807,6 @@ export default function Mql5SignalDashboard() {
               <span style={{ fontSize: '11px', color: '#1e293b' }}>Users</span>
             </div>
 
-            {/* Realistic Political World Map with Accurate Continental / Country Outlines & Reviewer Locations Marked */}
             <div style={{ border: '1px solid #e2e8f0', padding: '20px', borderRadius: '4px', background: '#fff', textAlign: 'center', minHeight: '380px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
               <svg
                 viewBox="0 0 950 620"
@@ -924,26 +878,26 @@ export default function Mql5SignalDashboard() {
             <ul style={{ margin: '0 0 0 20px', padding: '0', display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <li style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span>📥</span>
-                <a href="https://www.mql5.com" target="_blank" rel="noopener noreferrer" style={{ color: '#0284c7', textDecoration: 'underline' }}>
+                <a href="/guides?guide=backtests" style={{ color: '#0284c7', textDecoration: 'underline' }}>
                   Instructions for downloading the demo version and running backtests.
                 </a>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span>👥</span>
-                <a href="https://www.mql5.com" target="_blank" rel="noopener noreferrer" style={{ color: '#0284c7', textDecoration: 'underline' }}>
-                  Guide on how to copy trade by following Bayarsaikhan.
+                <a href="/guides?guide=copy-trading" style={{ color: '#0284c7', textDecoration: 'underline' }}>
+                  Guide on how to copy trade by following BJ.
                 </a>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span>🤖</span>
-                <a href="https://www.mql5.com" target="_blank" rel="noopener noreferrer" style={{ color: '#0284c7', textDecoration: 'underline' }}>
+                <a href="/guides?guide=ea-rental" style={{ color: '#0284c7', textDecoration: 'underline' }}>
                   Instructions for renting and operating the Gold Master robot.
                 </a>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <span>📖</span>
-                <a href="https://www.mql5.com" target="_blank" rel="noopener noreferrer" style={{ color: '#0284c7', textDecoration: 'underline' }}>
-                  Purchasing the book &quot;Freedom Algorithm&quot; written by Mr. Bayarsaikhan.
+                <a href="/guides?guide=freedom-algorithm" style={{ color: '#0284c7', textDecoration: 'underline' }}>
+                  Purchasing the book &quot;Freedom Algorithm&quot; written by Mr. BJ.
                 </a>
               </li>
             </ul>
