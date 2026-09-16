@@ -13,6 +13,7 @@ const formatMoney = (value: number | string | null | undefined) =>
 
 export default function Mql5SignalDashboard() {
   const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -46,8 +47,8 @@ export default function Mql5SignalDashboard() {
       });
   }, []);
 
-  if (loading) return <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'Arial' }}>Loading Signal Data...</div>;
-  if (errorMsg) return <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'Arial', color: '#dc2626' }}><h2>API Error</h2><p>{errorMsg}</p></div>;
+  if (loading) return <div className={`p-10 text-center font-sans ${isDark ? 'bg-slate-950 text-slate-100' : 'bg-slate-100 text-slate-800'}`}>Loading Signal Data...</div>;
+  if (errorMsg) return <div className={`p-10 text-center font-sans ${isDark ? 'bg-slate-950 text-rose-400' : 'bg-slate-100 text-red-600'}`}><h2 className="text-lg font-bold">API Error</h2><p>{errorMsg}</p></div>;
 
   const equity = data?.equity ?? 4921.65;
   const profit = data?.profit ?? 421.65;
@@ -170,60 +171,49 @@ export default function Mql5SignalDashboard() {
   };
 
   return (
-    <div className="dashboard-shell" style={{ background: '#f8fafc', color: '#1e293b', minHeight: '100vh', padding: '15px', fontFamily: 'Arial, sans-serif' }}>
-      <div className="dashboard-card" style={{ maxWidth: '1280px', margin: '0 auto', background: '#ffffff', padding: '15px', borderRadius: '4px', border: '1px solid #e2e8f0' }}>
+    <div className={`min-h-screen font-sans p-2 sm:p-4 transition-colors duration-200 ${isDark ? 'bg-slate-950 text-slate-100' : 'bg-slate-100 text-slate-800'}`}>
+      <div className={`max-w-7xl mx-auto p-3 sm:p-5 rounded-md border shadow-sm transition-colors duration-200 ${isDark ? 'bg-slate-900 border-slate-800 text-slate-100' : 'bg-white border-slate-200 text-slate-800'}`}>
         
-        <div style={{ minHeight: '145px', borderBottom: '1px solid #e2e8f0', padding: '10px 0 15px 45px', marginBottom: '15px', color: theme === 'dark' ? '#f8fafc' : '#1e293b' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
-              <img src={theme === 'dark' ? '/goldmaster-logo-dark.png' : '/goldmaster-logo.png'} alt="GoldMaster logo" style={{ width: '87px', height: '87px', objectFit: 'contain' }} />
-              <span style={{ fontSize: '22px', lineHeight: 1.4 }}>IF YOU WANT LONG TERM STABLE PROFITS, JOIN US.</span>
+        {/* Header Section */}
+        <div className={`border-b pb-4 mb-4 ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left w-full md:w-auto">
+              <img src={isDark ? '/goldmaster-logo-dark.png' : '/goldmaster-logo.png'} alt="GoldMaster logo" className="w-16 h-16 sm:w-20 sm:h-20 object-contain flex-shrink-0" />
+              <span className={`text-base sm:text-xl font-semibold leading-snug ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>IF YOU WANT LONG TERM STABLE PROFITS, JOIN US.</span>
             </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button type="button" onClick={() => { window.location.href = '/signin'; }} style={{ background: 'transparent', border: '1px solid #16a34a', color: '#16a34a', padding: '8px 18px', borderRadius: '4px', fontWeight: 600 }}>Sign in</button>
-              <button type="button" onClick={() => { window.location.href = '/login'; }} style={{ background: '#16a34a', border: '1px solid #16a34a', color: '#fff', padding: '8px 18px', borderRadius: '4px', fontWeight: 600 }}>Log in</button>
+            <div className="flex gap-2 w-full sm:w-auto justify-center">
+              <button type="button" onClick={() => { window.location.href = '/signin'; }} className="flex-1 sm:flex-none bg-transparent border border-green-500 text-green-500 px-4 py-2 rounded font-semibold text-sm hover:bg-green-500/10 transition">Sign in</button>
+              <button type="button" onClick={() => { window.location.href = '/login'; }} className="flex-1 sm:flex-none bg-green-600 border border-green-600 text-white px-4 py-2 rounded font-semibold text-sm hover:bg-green-700 transition">Log in</button>
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flexWrap: 'wrap', marginTop: '26px' }}>
-            <strong style={{ flexBasis: '100%', fontSize: '18px' }}>{data?.name || 'Result of GoldMaster Expert Advisor'}</strong>                        <img src="/mongolia-flag.png" alt="Mongolian flag" style={{ width: '32px', height: '18px', objectFit: 'contain', borderRadius: '2px' }} />
-            <span style={{ color: theme === 'dark' ? '#cbd5e1' : '#475569' }}>Owner: {data?.author || 'BJ Janchiv'}</span><span style={{ color: '#eab308', fontSize: '16px' }}>★★★★★</span><span style={{ color: theme === 'dark' ? '#cbd5e1' : '#64748b', fontSize: '12px' }}>{data?.reviewsCount ?? 0} reviews</span><span style={{ color: '#16a34a', fontSize: '12px' }}>■■■ Reliability</span><span style={{ color: '#16a34a', fontSize: '12px' }}>{data?.reliability || '1 week'}</span><span style={{ color: theme === 'dark' ? '#cbd5e1' : '#64748b', fontSize: '12px' }}>👥 {data?.subscribersCount || '0 / 0 USD'}</span>
+          <div className="flex items-center gap-3 flex-wrap mt-4 text-xs sm:text-sm">
+            <strong className={`w-full text-base sm:text-lg font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{data?.name || 'Result of GoldMaster Expert Advisor'}</strong>                        
+            <img src="/mongolia-flag.png" alt="Mongolian flag" className="w-7 h-4 object-contain rounded-sm" />
+            <span className={isDark ? 'text-slate-300' : 'text-slate-600'}>Owner: {data?.author || 'BJ Janchiv'}</span>
+            <span className="text-yellow-500 text-base">★★★★★</span>
+            <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>{data?.reviewsCount ?? 0} reviews</span>
+            <span className="text-green-500 font-medium">■■■ Reliability</span>
+            <span className="text-green-500 font-medium">{data?.reliability || '1 week'}</span>
+            <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>👥 {data?.subscribersCount || '0 / 0 USD'}</span>
           </div>
         </div>
 
         {/* Financial Overview & Weekly Account Change Layout */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 260px 280px', gap: '20px', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '15px', marginBottom: '15px' }}>
+        <div className={`grid grid-cols-1 lg:grid-cols-[1.2fr_260px_280px] gap-5 items-start border-b pb-5 mb-5 ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '10px' }}>
-              <div style={{ fontSize: '14px', color: '#475569', textTransform: 'capitalize' }}>{growthLabel}</div>
-              <div style={{ fontSize: '26px', color: '#16a34a' }}>
+            <div className="flex items-baseline gap-3 mb-3 flex-wrap">
+              <div className={`text-sm capitalize ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{growthLabel}</div>
+              <div className="text-2xl font-bold text-green-500">
                 +{growthPercent.toFixed(2)}%
               </div>
             </div>
             
-            <div style={{ 
-              background: '#ffffff', 
-              border: '1px solid #cbd5e1', 
-              borderRadius: '4px',
-              padding: '10px 12px',
-              width: '100%',
-              minHeight: '110px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between'
-            }}>
-              <div style={{ fontSize: '13px', color: '#0284c7', marginBottom: '8px', textAlign: 'left' }}>
+            <div className={`border rounded p-3 w-full min-h-[110px] flex flex-col justify-between shadow-xs ${isDark ? 'bg-slate-950 border-slate-800' : 'bg-white border-slate-300'}`}>
+              <div className={`text-xs font-medium mb-2 text-left ${isDark ? 'text-sky-400' : 'text-sky-600'}`}>
                 Weekly Account Change
               </div>
               
-              <div style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '3px', 
-                height: '65px', 
-                overflowX: 'auto',
-                width: '100%',
-                paddingBottom: '2px'
-              }}>
+              <div className="flex items-center gap-1 h-[65px] overflow-x-auto w-full pb-1">
                 {weeklyData.map((w: any, idx: number) => {
                   const hasData = w.change !== null && w.change !== 0;
                   const maxWeeklyVal = Math.max(...weeklyData.map((d: any) => Math.abs(d.change || 0)), 1);
@@ -234,17 +224,17 @@ export default function Mql5SignalDashboard() {
                     <div 
                       key={idx} 
                       title={hasData ? `Week ${w.week}: $${w.change}` : `Week ${w.week}: No data`} 
-                      style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', width: '7px', flexShrink: 0, cursor: hasData ? 'pointer' : 'default' }}
+                      className="flex flex-col justify-center h-full w-2 flex-shrink-0 cursor-pointer"
                     >
-                      <div style={{ height: '30px', display: 'flex', alignItems: 'flex-end' }}>
+                      <div className="h-[30px] flex items-end">
                         {isPositive && hasData && (
-                          <div style={{ width: '7px', height: `${barHeight}px`, background: '#16a34a', borderRadius: '1px' }} />
+                          <div className="w-2 bg-green-500 rounded-2xs" style={{ height: `${barHeight}px` }} />
                         )}
                       </div>
-                      <div style={{ height: '1px', background: '#94a3b8', width: '100%' }} />
-                      <div style={{ height: '30px', display: 'flex', alignItems: 'flex-start' }}>
+                      <div className={`h-px w-full ${isDark ? 'bg-slate-700' : 'bg-slate-400'}`} />
+                      <div className="h-[30px] flex items-start">
                         {!isPositive && hasData && (
-                          <div style={{ width: '7px', height: `${barHeight}px`, background: '#881337', borderRadius: '1px' }} />
+                          <div className="w-2 bg-rose-500 rounded-2xs" style={{ height: `${barHeight}px` }} />
                         )}
                       </div>
                     </div>
@@ -253,23 +243,23 @@ export default function Mql5SignalDashboard() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '15px', alignItems: 'center', marginTop: '10px' }}>
-              <span style={{ color: '#0284c7', fontSize: '13px' }}>{data?.broker}</span>
-              <span style={{ color: '#64748b', fontSize: '12px' }}>{data?.leverage}</span>
+            <div className="flex gap-4 items-center mt-3 text-xs">
+              <span className={`font-medium ${isDark ? 'text-sky-400' : 'text-sky-600'}`}>{data?.broker}</span>
+              <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>{data?.leverage}</span>
             </div>
           </div>
 
-          <div style={{ border: '1px solid #e2e8f0', borderRadius: '4px', background: '#f8fafc', padding: '8px' }}>
-            <div style={{ fontSize: '12px', textAlign: 'center', color: '#0284c7', marginBottom: '6px' }}>
+          <div className={`border rounded p-3 ${isDark ? 'bg-slate-950 border-slate-800 text-slate-200' : 'bg-slate-50 border-slate-200 text-slate-600'}`}>
+            <div className={`text-xs text-center font-medium mb-2 ${isDark ? 'text-sky-400' : 'text-sky-600'}`}>
               Algo trading: {algoTrading}%
             </div>
-            <table style={{ width: '100%', fontSize: '11px', borderCollapse: 'collapse', color: '#475569' }}>
+            <table className={`w-full text-xs border-collapse ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
               <tbody>
-                <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '3px 0' }}>Maximum drawdown:</td><td style={{ padding: '3px 0', textAlign: 'right' }}>{maxDrawdown}%</td></tr>
-                <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '3px 0' }}>Profit Trades:</td><td style={{ padding: '3px 0', textAlign: 'right', color: '#16a34a' }}>{profitTrades}%</td></tr>
-                <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '3px 0' }}>Max deposit load:</td><td style={{ padding: '3px 0', textAlign: 'right' }}>{maxDepositLoad}%</td></tr>
-                <tr style={{ borderBottom: '1px solid #e2e8f0' }}><td style={{ padding: '3px 0' }}>Loss Trades:</td><td style={{ padding: '3px 0', textAlign: 'right', color: '#881337' }}>{lossTrades}%</td></tr>
-                <tr><td colSpan={2} style={{ padding: '4px 0 2px 0', textAlign: 'center' }}>Trading activity: {tradingActivity}%</td></tr>
+                <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-200'}`}><td className="py-1">Maximum drawdown:</td><td className={`py-1 text-right font-medium ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>{maxDrawdown}%</td></tr>
+                <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-200'}`}><td className="py-1">Profit Trades:</td><td className="py-1 text-right font-medium text-green-500">{profitTrades}%</td></tr>
+                <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-200'}`}><td className="py-1">Max deposit load:</td><td className={`py-1 text-right font-medium ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>{maxDepositLoad}%</td></tr>
+                <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-200'}`}><td className="py-1">Loss Trades:</td><td className="py-1 text-right font-medium text-rose-500">{lossTrades}%</td></tr>
+                <tr><td colSpan={2} className={`py-1.5 text-center font-medium ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Trading activity: {tradingActivity}%</td></tr>
               </tbody>
             </table>
           </div>
@@ -281,36 +271,42 @@ export default function Mql5SignalDashboard() {
             const depositWidth = maxVal > 0 ? `${(initialDeposit / maxVal) * 100}%` : '0%';
 
             return (
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '3px' }}>
-                  <span style={{ color: '#0284c7' }}>Equity</span>
-                  <span style={{ color: '#1e293b' }}>${equity.toLocaleString(undefined, { minimumFractionDigits: 2 })} USD</span>
-                </div>
-                <div style={{ height: '5px', background: '#e2e8f0', borderRadius: '2px', marginBottom: '6px', overflow: 'hidden' }}>
-                  <div style={{ height: '100%', background: '#0284c7', width: equityWidth }}></div>
+              <div className="space-y-2 text-xs">
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className={`font-medium ${isDark ? 'text-sky-400' : 'text-sky-600'}`}>Equity</span>
+                    <span className={`font-bold ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>${equity.toLocaleString(undefined, { minimumFractionDigits: 2 })} USD</span>
+                  </div>
+                  <div className={`h-1.5 rounded-full overflow-hidden ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}>
+                    <div className="h-full bg-sky-500" style={{ width: equityWidth }}></div>
+                  </div>
                 </div>
                 
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '3px' }}>
-                  <span style={{ color: '#0284c7' }}>Profit</span>
-                  <span style={{ color: profit >= 0 ? '#16a34a' : '#881337' }}>${profit.toLocaleString(undefined, { minimumFractionDigits: 2 })} USD</span>
-                </div>
-                <div style={{ height: '5px', background: '#e2e8f0', borderRadius: '2px', marginBottom: '6px', overflow: 'hidden' }}>
-                  <div style={{ height: '100%', background: profit >= 0 ? '#16a34a' : '#881337', width: profitWidth }}></div>
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '3px' }}>
-                  <span style={{ color: '#64748b' }}>Initial Deposit</span>
-                  <span>${initialDeposit.toLocaleString(undefined, { minimumFractionDigits: 2 })} USD</span>
-                </div>
-                <div style={{ height: '5px', background: '#e2e8f0', borderRadius: '2px', marginBottom: '6px', overflow: 'hidden' }}>
-                  <div style={{ height: '100%', background: '#0284c7', width: depositWidth }}></div>
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className={`font-medium ${isDark ? 'text-sky-400' : 'text-sky-600'}`}>Profit</span>
+                    <span className={`font-bold ${profit >= 0 ? 'text-green-500' : 'text-rose-500'}`}>${profit.toLocaleString(undefined, { minimumFractionDigits: 2 })} USD</span>
+                  </div>
+                  <div className={`h-1.5 rounded-full overflow-hidden ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}>
+                    <div className={`h-full ${profit >= 0 ? 'bg-green-500' : 'bg-rose-500'}`} style={{ width: profitWidth }}></div>
+                  </div>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#64748b', marginBottom: '2px' }}>
-                  <span>Withdrawals</span><span>{formatMoney(withdrawals)} USD</span>
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className={`font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Initial Deposit</span>
+                    <span className={`font-bold ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>${initialDeposit.toLocaleString(undefined, { minimumFractionDigits: 2 })} USD</span>
+                  </div>
+                  <div className={`h-1.5 rounded-full overflow-hidden ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}>
+                    <div className="h-full bg-sky-500" style={{ width: depositWidth }}></div>
+                  </div>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#64748b', marginBottom: '8px' }}>
-                  <span>Deposits</span><span>{formatMoney(deposits)} USD</span>
+
+                <div className={`flex justify-between pt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                  <span>Withdrawals</span><span className={`font-medium ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>{formatMoney(withdrawals)} USD</span>
+                </div>
+                <div className={`flex justify-between ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                  <span>Deposits</span><span className={`font-medium ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>{formatMoney(deposits)} USD</span>
                 </div>
               </div>
             );
@@ -318,17 +314,16 @@ export default function Mql5SignalDashboard() {
         </div>
 
         {/* Navigation Tabs */}
-        <div style={{ display: 'flex', gap: '22px', borderBottom: '1px solid #e2e8f0', marginBottom: '15px', fontSize: '13px' }}>
+        <div className={`flex gap-4 sm:gap-6 border-b mb-4 text-xs sm:text-sm overflow-x-auto whitespace-nowrap ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
           {['Balance', 'History', 'Statistics', 'Risks', 'Users', 'Description', 'Reviews'].map((tab) => (
             <span
               key={tab}
               onClick={() => setActiveTab(tab)}
-              style={{
-                paddingBottom: '6px',
-                cursor: 'pointer',
-                color: activeTab === tab ? '#0284c7' : '#64748b',
-                borderBottom: activeTab === tab ? '2px solid #0284c7' : 'none'
-              }}
+              className={`pb-2 cursor-pointer font-medium transition ${
+                activeTab === tab 
+                  ? `${isDark ? 'text-sky-400 border-b-2 border-sky-400' : 'text-sky-600 border-b-2 border-sky-600'}` 
+                  : `${isDark ? 'text-slate-400 hover:text-slate-200' : 'text-slate-500 hover:text-slate-800'}`
+              }`}
             >
               {tab}
             </span>
@@ -338,35 +333,35 @@ export default function Mql5SignalDashboard() {
         {/* Tab Contents */}
         {activeTab === 'Balance' && (
           <div>
-            <div style={{ marginBottom: '20px', overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
+            <div className="mb-5 overflow-x-auto">
+              <table className={`w-full border-collapse text-xs text-left min-w-[650px] ${isDark ? 'text-slate-300' : 'text-slate-800'}`}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid #e2e8f0', color: '#64748b' }}>
-                    <th style={{ padding: '6px' }}>Symbol</th>
-                    <th style={{ padding: '6px' }}>Time</th>
-                    <th style={{ padding: '6px' }}>Type</th>
-                    <th style={{ padding: '6px' }}>Volume</th>
-                    <th style={{ padding: '6px' }}>Price</th>
-                    <th style={{ padding: '6px' }}>S/L</th>
-                    <th style={{ padding: '6px' }}>T/P</th>
-                    <th style={{ padding: '6px' }}>Price</th>
-                    <th style={{ padding: '6px' }}>Swap</th>
-                    <th style={{ padding: '6px', textAlign: 'right' }}>Profit</th>
+                  <tr className={`border-b ${isDark ? 'border-slate-800 text-slate-400' : 'border-slate-200 text-slate-500'}`}>
+                    <th className="p-2">Symbol</th>
+                    <th className="p-2">Time</th>
+                    <th className="p-2">Type</th>
+                    <th className="p-2">Volume</th>
+                    <th className="p-2">Price</th>
+                    <th className="p-2">S/L</th>
+                    <th className="p-2">T/P</th>
+                    <th className="p-2">Price</th>
+                    <th className="p-2">Swap</th>
+                    <th className="p-2 text-right">Profit</th>
                   </tr>
                 </thead>
                 <tbody>
                   {data?.positions?.map((pos: any, idx: number) => (
-                    <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                      <td style={{ padding: '6px' }}>{pos.symbol}</td>
-                      <td style={{ padding: '6px', color: '#64748b' }}>{pos.time}</td>
-                      <td style={{ padding: '6px', color: pos.type === 'Buy' ? '#0284c7' : '#881337' }}>{pos.type}</td>
-                      <td style={{ padding: '6px' }}>{pos.volume}</td>
-                      <td style={{ padding: '6px' }}>{pos.openPrice}</td>
-                      <td style={{ padding: '6px' }}>{pos.stopLoss}</td>
-                      <td style={{ padding: '6px' }}>{pos.takeProfit}</td>
-                      <td style={{ padding: '6px' }}>{pos.currentPrice}</td>
-                      <td style={{ padding: '6px' }}>{formatMoney(pos.swap)}</td>
-                      <td style={{ padding: '6px', textAlign: 'right', color: pos.profit >= 0 ? '#16a34a' : '#881337' }}>
+                    <tr key={idx} className={`border-b ${isDark ? 'border-slate-800/60 hover:bg-slate-800/40' : 'border-slate-100 hover:bg-slate-50'}`}>
+                      <td className="p-2 font-medium">{pos.symbol}</td>
+                      <td className={`p-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{pos.time}</td>
+                      <td className={`p-2 font-medium ${pos.type === 'Buy' ? 'text-sky-400' : 'text-rose-400'}`}>{pos.type}</td>
+                      <td className="p-2">{pos.volume}</td>
+                      <td className="p-2">{pos.openPrice}</td>
+                      <td className="p-2">{pos.stopLoss}</td>
+                      <td className="p-2">{pos.takeProfit}</td>
+                      <td className="p-2">{pos.currentPrice}</td>
+                      <td className="p-2">{formatMoney(pos.swap)}</td>
+                      <td className={`p-2 text-right font-medium ${pos.profit >= 0 ? 'text-green-500' : 'text-rose-500'}`}>
                         {formatMoney(pos.profit)}
                       </td>
                     </tr>
@@ -375,17 +370,17 @@ export default function Mql5SignalDashboard() {
               </table>
             </div>
 
-            <div style={{ marginBottom: '20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginBottom: '8px' }}>
-                <button onClick={() => setChartType('Growth')} style={{ background: chartType === 'Growth' ? '#0284c7' : '#e2e8f0', color: chartType === 'Growth' ? '#fff' : '#475569', border: 'none', padding: '3px 10px', borderRadius: '3px', fontSize: '11px', cursor: 'pointer' }}>Growth</button>
-                <button onClick={() => setChartType('Balance')} style={{ background: chartType === 'Balance' ? '#0284c7' : '#e2e8f0', color: chartType === 'Balance' ? '#fff' : '#475569', border: 'none', padding: '3px 10px', borderRadius: '3px', fontSize: '11px', cursor: 'pointer' }}>Balance</button>
+            <div className="mb-5">
+              <div className="flex justify-end gap-2 mb-2">
+                <button onClick={() => setChartType('Growth')} className={`px-3 py-1 rounded text-xs font-medium cursor-pointer ${chartType === 'Growth' ? 'bg-sky-600 text-white' : `${isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-200 text-slate-600'}`}`}>Growth</button>
+                <button onClick={() => setChartType('Balance')} className={`px-3 py-1 rounded text-xs font-medium cursor-pointer ${chartType === 'Balance' ? 'bg-sky-600 text-white' : `${isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-200 text-slate-600'}`}`}>Balance</button>
               </div>
 
-              <div style={{ border: '1px solid #e2e8f0', padding: '12px', borderRadius: '4px', background: '#fff', position: 'relative' }}>
+              <div className={`border p-3 rounded relative overflow-x-auto ${isDark ? 'bg-slate-950 border-slate-800' : 'bg-white border-slate-200'}`}>
                 <svg 
                   ref={svgRef}
                   viewBox={`0 0 ${svgWidth} ${svgHeight}`} 
-                  style={{ width: '100%', height: '180px', overflow: 'visible', cursor: 'crosshair' }}
+                  className="w-full h-[180px] min-w-[500px] overflow-visible cursor-crosshair"
                   onMouseMove={handleMouseMove}
                   onMouseLeave={() => setHoverIndex(null)}
                 >
@@ -394,16 +389,16 @@ export default function Mql5SignalDashboard() {
                     const val = maxVal - ratio * (maxVal - minVal);
                     return (
                       <g key={idx}>
-                        <line x1={paddingX} y1={y} x2={svgWidth - paddingX} y2={y} stroke="#f1f5f9" strokeWidth="1" />
-                        <text x={paddingX - 8} y={y + 4} fill="#94a3b8" fontSize="10" textAnchor="end">
+                        <line x1={paddingX} y1={y} x2={svgWidth - paddingX} y2={y} stroke={isDark ? '#1e293b' : '#f1f5f9'} strokeWidth="1" />
+                        <text x={paddingX - 8} y={y + 4} fill={isDark ? '#94a3b8' : '#94a3b8'} fontSize="10" textAnchor="end">
                           {chartType === 'Growth' ? `${val.toFixed(2)}%` : formatMoney(val)}
                         </text>
                       </g>
                     );
                   })}
-                  <polyline fill="none" stroke="#0284c7" strokeWidth="2" points={points} />
+                  <polyline fill="none" stroke="#38bdf8" strokeWidth="2" points={points} />
                 </svg>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: '#64748b', marginTop: '4px', paddingLeft: '50px', paddingRight: '50px' }}>
+                <div className={`flex justify-between text-[10px] mt-1 px-12 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                   <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
                 </div>
               </div>
@@ -413,37 +408,37 @@ export default function Mql5SignalDashboard() {
 
         {/* History Tab */}
         {activeTab === 'History' && (
-          <div style={{ overflowX: 'auto', marginBottom: '15px' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px', textAlign: 'left' }}>
+          <div className="overflow-x-auto mb-4">
+            <table className={`w-full border-collapse text-xs text-left min-w-[700px] ${isDark ? 'text-slate-300' : 'text-slate-800'}`}>
               <thead>
-                <tr style={{ borderBottom: '1px solid #e2e8f0', color: '#64748b' }}>
-                  <th style={{ padding: '6px' }}>Time</th>
-                  <th style={{ padding: '6px' }}>Type</th>
-                  <th style={{ padding: '6px' }}>Volume</th>
-                  <th style={{ padding: '6px' }}>Symbol</th>
-                  <th style={{ padding: '6px' }}>Price</th>
-                  <th style={{ padding: '6px' }}>Time</th>
-                  <th style={{ padding: '6px' }}>Price</th>
-                  <th style={{ padding: '6px' }}>Commission</th>
-                  <th style={{ padding: '6px' }}>Swap</th>
-                  <th style={{ padding: '6px', textAlign: 'right' }}>Profit</th>
+                <tr className={`border-b ${isDark ? 'border-slate-800 text-slate-400' : 'border-slate-200 text-slate-500'}`}>
+                  <th className="p-2">Time</th>
+                  <th className="p-2">Type</th>
+                  <th className="p-2">Volume</th>
+                  <th className="p-2">Symbol</th>
+                  <th className="p-2">Price</th>
+                  <th className="p-2">Time</th>
+                  <th className="p-2">Price</th>
+                  <th className="p-2">Commission</th>
+                  <th className="p-2">Swap</th>
+                  <th className="p-2 text-right">Profit</th>
                 </tr>
               </thead>
               <tbody>
                 {data?.history?.map((h: any, i: number) => {
                   const isDeal = h.type === 'Buy' || h.type === 'Sell';
                   return (
-                    <tr key={i} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                      <td style={{ padding: '6px', color: '#64748b' }}>{h.openTime}</td>
-                      <td style={{ padding: '6px', color: h.type === 'Buy' ? '#0284c7' : h.type === 'Sell' ? '#881337' : '#475569' }}>{h.type}</td>
-                      <td style={{ padding: '6px' }}>{h.volume || ''}</td>
-                      <td style={{ padding: '6px' }}>{h.symbol || ''}</td>
-                      <td style={{ padding: '6px' }}>{h.openPrice || ''}</td>
-                      <td style={{ padding: '6px', color: '#64748b' }}>{h.closeTime}</td>
-                      <td style={{ padding: '6px' }}>{isDeal ? h.closePrice : ''}</td>
-                      <td style={{ padding: '6px' }}>{h.commission ? formatMoney(h.commission) : ''}</td>
-                      <td style={{ padding: '6px' }}>{h.swap ? formatMoney(h.swap) : ''}</td>
-                      <td style={{ padding: '6px', textAlign: 'right', color: h.profit >= 0 ? '#16a34a' : '#881337' }}>
+                    <tr key={i} className={`border-b ${isDark ? 'border-slate-800/60 hover:bg-slate-800/40' : 'border-slate-100 hover:bg-slate-50'}`}>
+                      <td className={`p-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{h.openTime}</td>
+                      <td className={`p-2 font-medium ${h.type === 'Buy' ? 'text-sky-400' : h.type === 'Sell' ? 'text-rose-400' : `${isDark ? 'text-slate-300' : 'text-slate-600'}`}`}>{h.type}</td>
+                      <td className="p-2">{h.volume || ''}</td>
+                      <td className="p-2">{h.symbol || ''}</td>
+                      <td className="p-2">{h.openPrice || ''}</td>
+                      <td className={`p-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{h.closeTime}</td>
+                      <td className="p-2">{isDeal ? h.closePrice : ''}</td>
+                      <td className="p-2">{h.commission ? formatMoney(h.commission) : ''}</td>
+                      <td className="p-2">{h.swap ? formatMoney(h.swap) : ''}</td>
+                      <td className={`p-2 text-right font-medium ${h.profit >= 0 ? 'text-green-500' : 'text-rose-500'}`}>
                         {h.profit !== undefined && h.profit !== null ? formatMoney(h.profit) : ''}
                       </td>
                     </tr>
@@ -454,47 +449,47 @@ export default function Mql5SignalDashboard() {
           </div>
         )}
 
-        {/* STATISTICS TAB (Safely guarded against missing properties) */}
+        {/* STATISTICS TAB */}
         {activeTab === 'Statistics' && (
-          <div style={{ fontSize: '12px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '20px' }}>
+          <div className="text-xs">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
               <div>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <table className="w-full border-collapse">
                   <tbody>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Trades</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.trades ?? 0}</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Profit trades (%):</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#16a34a' }}>{stats?.profitTradesCount ?? 0} ({stats?.profitTradesPercent ?? 0}%)</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Loss trades (%):</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#881337' }}>{stats?.lossTradesCount ?? 0} ({stats?.lossTradesPercent ?? 0}%)</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Best trade:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#16a34a' }}>{stats?.bestTrade ?? 0} USD</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Worst trade:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#881337' }}>{stats?.worstTrade ?? 0} USD</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Gross profit:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#16a34a' }}>{stats?.grossProfit ?? 0} ({stats?.grossProfitPips ?? 0} pips)</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Gross loss:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#881337' }}>{stats?.grossLoss ?? 0} ({stats?.grossLossPips ?? 0} pips)</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Trades</td><td className={`py-1.5 text-right font-medium ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>{stats?.trades ?? 0}</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Profit trades (%):</td><td className="py-1.5 text-right font-medium text-green-500">{stats?.profitTradesCount ?? 0} ({stats?.profitTradesPercent ?? 0}%)</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Loss trades (%):</td><td className="py-1.5 text-right font-medium text-rose-500">{stats?.lossTradesCount ?? 0} ({stats?.lossTradesPercent ?? 0}%)</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Best trade:</td><td className="py-1.5 text-right font-medium text-green-500">{stats?.bestTrade ?? 0} USD</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Worst trade:</td><td className="py-1.5 text-right font-medium text-rose-500">{stats?.worstTrade ?? 0} USD</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Gross profit:</td><td className="py-1.5 text-right font-medium text-green-500">{stats?.grossProfit ?? 0} ({stats?.grossProfitPips ?? 0} pips)</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Gross loss:</td><td className="py-1.5 text-right font-medium text-rose-500">{stats?.grossLoss ?? 0} ({stats?.grossLossPips ?? 0} pips)</td></tr>
                   </tbody>
                 </table>
               </div>
 
               <div>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <table className="w-full border-collapse">
                   <tbody>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Max consecutive wins:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.maxConsecutiveWins ?? 0} ({stats?.maxConsecutiveWinsUsd ?? 0} USD)</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Max consecutive losses:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.maxConsecutiveLosses ?? 0} ({stats?.maxConsecutiveLossesUsd ?? 0} USD)</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Recovery factor:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.recoveryFactor ?? 0}</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Sharpe ratio:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#0284c7', fontWeight: 'bold' }}>{stats?.sharpeRatio ?? 0}</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Profit factor:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.profitFactor ?? 0}</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Expected payoff:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.expectedPayoff ?? 0}</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Monthly growth:</td><td style={{ padding: '5px 0', textAlign: 'right', color: '#16a34a' }}>{stats?.monthlyGrowth ?? 0}%</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Max consecutive wins:</td><td className={`py-1.5 text-right font-medium ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>{stats?.maxConsecutiveWins ?? 0} ({stats?.maxConsecutiveWinsUsd ?? 0} USD)</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Max consecutive losses:</td><td className={`py-1.5 text-right font-medium ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>{stats?.maxConsecutiveLosses ?? 0} ({stats?.maxConsecutiveLossesUsd ?? 0} USD)</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Recovery factor:</td><td className={`py-1.5 text-right font-medium ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>{stats?.recoveryFactor ?? 0}</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Sharpe ratio:</td><td className="py-1.5 text-right font-bold text-sky-400">{stats?.sharpeRatio ?? 0}</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Profit factor:</td><td className={`py-1.5 text-right font-medium ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>{stats?.profitFactor ?? 0}</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Expected payoff:</td><td className={`py-1.5 text-right font-medium ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>{stats?.expectedPayoff ?? 0}</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Monthly growth:</td><td className="py-1.5 text-right font-medium text-green-500">{stats?.monthlyGrowth ?? 0}%</td></tr>
                   </tbody>
                 </table>
               </div>
 
               <div>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <table className="w-full border-collapse">
                   <tbody>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Trading activity:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.tradingActivity ?? 0}%</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Algo trading:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.algoTrading ?? 0}%</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Max deposit load:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.maxDepositLoad ?? 0}%</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Latest trade:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.latestTrade ?? '-'}</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Trades per week:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.tradesPerWeek ?? 0}</td></tr>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9' }}><td style={{ padding: '5px 0', color: '#64748b' }}>Average holding time:</td><td style={{ padding: '5px 0', textAlign: 'right' }}>{stats?.avgHoldingTime ?? '-'}</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Trading activity:</td><td className={`py-1.5 text-right font-medium ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>{stats?.tradingActivity ?? 0}%</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Algo trading:</td><td className={`py-1.5 text-right font-medium ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>{stats?.algoTrading ?? 0}%</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Max deposit load:</td><td className={`py-1.5 text-right font-medium ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>{stats?.maxDepositLoad ?? 0}%</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Latest trade:</td><td className={`py-1.5 text-right font-medium ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>{stats?.latestTrade ?? '-'}</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Trades per week:</td><td className={`py-1.5 text-right font-medium ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>{stats?.tradesPerWeek ?? 0}</td></tr>
+                    <tr className={`border-b ${isDark ? 'border-slate-800' : 'border-slate-100'}`}><td className={`py-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Average holding time:</td><td className={`py-1.5 text-right font-medium ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>{stats?.avgHoldingTime ?? '-'}</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -502,47 +497,39 @@ export default function Mql5SignalDashboard() {
           </div>
         )}
 
-        {/* RISKS TAB (Safely guarded against undefined/null properties) */}
+        {/* RISKS TAB */}
         {activeTab === 'Risks' && (
-          <div style={{ fontSize: '12px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+          <div className="text-xs">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3">
               <div>
-                <span style={{ fontSize: '16px', color: '#1e293b', marginRight: '15px' }}>
+                <span className={`text-base font-bold mr-3 ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>
                   {riskChartMode === 'Deposit load' ? `${maxDepositLoad.toFixed(2)}%` : `${maxDrawdown.toFixed(2)}%`}
                 </span>
-                <span style={{ fontSize: '12px', color: '#64748b' }}>
+                <span className={`text-xs mr-4 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                   ● {riskChartMode === 'Deposit load' ? 'Deposit load' : 'Drawdown'}
                 </span>
-                <span style={{ fontSize: '16px', color: '#0284c7', marginLeft: '25px', marginRight: '10px' }}>
+                <span className="text-base font-bold text-sky-400 mr-2">
                   ${equity.toLocaleString(undefined, { minimumFractionDigits: 2 })} USD
                 </span>
-                <span style={{ fontSize: '12px', color: '#64748b' }}>● Balance</span>
+                <span className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>● Balance</span>
               </div>
-              <div style={{ display: 'flex', gap: '4px' }}>
+              <div className="flex gap-1">
                 <button 
                   onClick={() => setRiskChartMode('Deposit load')} 
-                  style={{ 
-                    background: riskChartMode === 'Deposit load' ? '#0284c7' : '#e2e8f0', 
-                    color: riskChartMode === 'Deposit load' ? '#fff' : '#475569', 
-                    border: 'none', padding: '4px 12px', borderRadius: '3px', fontSize: '11px', cursor: 'pointer' 
-                  }}
+                  className={`px-3 py-1 rounded text-xs font-medium cursor-pointer ${riskChartMode === 'Deposit load' ? 'bg-sky-600 text-white' : `${isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-200 text-slate-600'}`}`}
                 >
                   Deposit load
                 </button>
                 <button 
                   onClick={() => setRiskChartMode('Drawdown')} 
-                  style={{ 
-                    background: riskChartMode === 'Drawdown' ? '#0284c7' : '#e2e8f0', 
-                    color: riskChartMode === 'Drawdown' ? '#fff' : '#475569', 
-                    border: 'none', padding: '4px 12px', borderRadius: '3px', fontSize: '11px', cursor: 'pointer' 
-                  }}
+                  className={`px-3 py-1 rounded text-xs font-medium cursor-pointer ${riskChartMode === 'Drawdown' ? 'bg-sky-600 text-white' : `${isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-200 text-slate-600'}`}`}
                 >
                   Drawdown
                 </button>
               </div>
             </div>
 
-            <div style={{ border: '1px solid #e2e8f0', padding: '12px', borderRadius: '4px', background: '#fff', marginBottom: '25px', position: 'relative' }}>
+            <div className={`border p-3 rounded mb-6 relative overflow-x-auto ${isDark ? 'bg-slate-950 border-slate-800' : 'bg-white border-slate-200'}`}>
               {(() => {
                 const historyList = (riskChartMode === 'Deposit load' ? risks?.depositLoadHistory : risks?.drawdownHistory) || [];
                 const metricKey = riskChartMode === 'Deposit load' ? 'load' : 'drawdown';
@@ -551,14 +538,14 @@ export default function Mql5SignalDashboard() {
                 const maxBalance = historyList.length > 0 ? Math.max(...historyList.map((item: any) => item?.balance ?? initialDeposit), initialDeposit * 1.1) : initialDeposit * 1.1;
 
                 return (
-                  <svg ref={riskSvgRef} viewBox={`0 0 ${svgWidth} ${svgHeight}`} style={{ width: '100%', height: '180px', overflow: 'visible' }}>
+                  <svg ref={riskSvgRef} viewBox={`0 0 ${svgWidth} ${svgHeight}`} className="w-full h-[180px] min-w-[500px] overflow-visible">
                     {[0, 0.5, 1].map((ratio, idx) => {
                       const y = paddingY + ratio * (svgHeight - paddingY * 2);
                       const balVal = maxBalance - ratio * (maxBalance - minBalance);
                       const metricVal = maxMetric - ratio * maxMetric;
                       return (
                         <g key={idx}>
-                          <line x1={paddingX} y1={y} x2={svgWidth - paddingX} y2={y} stroke="#f1f5f9" strokeWidth="1" />
+                          <line x1={paddingX} y1={y} x2={svgWidth - paddingX} y2={y} stroke={isDark ? '#1e293b' : '#f1f5f9'} strokeWidth="1" />
                           <text x={paddingX - 8} y={y + 4} fill="#94a3b8" fontSize="10" textAnchor="end">
                             ${balVal.toFixed(0)}
                           </text>
@@ -570,92 +557,92 @@ export default function Mql5SignalDashboard() {
                     })}
                     <polyline 
                       fill="none" 
-                      stroke="#0284c7" 
+                      stroke="#38bdf8" 
                       strokeWidth="1.5" 
                       points={historyList.map((item: any, idx: number) => `${getX(idx, historyList.length, svgWidth)},${getY(item?.balance ?? 0, minBalance, maxBalance, svgHeight)}`).join(' ')} 
                     />
                     <polyline 
                       fill="none" 
-                      stroke="#334155" 
+                      stroke={isDark ? '#94a3b8' : '#334155'} 
                       strokeWidth="1.5" 
                       points={historyList.map((item: any, idx: number) => `${getX(idx, historyList.length, svgWidth)},${getY(item?.[metricKey] ?? 0, 0, maxMetric, svgHeight)}`).join(' ')} 
                     />
                   </svg>
                 );
               })()}
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: '#64748b', marginTop: '4px', paddingLeft: '50px', paddingRight: '50px' }}>
+              <div className={`flex justify-between text-[10px] mt-1 px-12 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                 <span>Aug 2026</span><span>Aug 2026</span><span>Sep 2026</span><span>Sep 2026</span>
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
               <div>
-                <div style={{ fontSize: '12px', color: '#1e293b', marginBottom: '4px' }}>Best trade: +{(risks?.bestTrade ?? 0).toFixed(2)} USD</div>
-                <div style={{ display: 'flex', height: '8px', background: '#e2e8f0', borderRadius: '2px', overflow: 'hidden' }}>
-                  <div style={{ width: '65%', background: '#16a34a' }}></div>
-                  <div style={{ width: '35%', background: '#fdba74' }}></div>
+                <div className={`text-xs mb-1 ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>Best trade: +{(risks?.bestTrade ?? 0).toFixed(2)} USD</div>
+                <div className={`flex h-2 rounded-sm overflow-hidden ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}>
+                  <div className="w-[65%] bg-green-500"></div>
+                  <div className="w-[35%] bg-amber-400"></div>
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: '12px', color: '#1e293b', marginBottom: '4px' }}>Maximum consecutive wins: {risks?.maxConsecutiveWins ?? 0}</div>
-                <div style={{ display: 'flex', height: '8px', background: '#e2e8f0', borderRadius: '2px', overflow: 'hidden' }}>
-                  <div style={{ width: '70%', background: '#16a34a' }}></div>
-                  <div style={{ width: '30%', background: '#fdba74' }}></div>
+                <div className={`text-xs mb-1 ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>Maximum consecutive wins: {risks?.maxConsecutiveWins ?? 0}</div>
+                <div className={`flex h-2 rounded-sm overflow-hidden ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}>
+                  <div className="w-[70%] bg-green-500"></div>
+                  <div className="w-[30%] bg-amber-400"></div>
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: '12px', color: '#1e293b', marginBottom: '4px' }}>Maximal consecutive profit: +{(risks?.maximalConsecutiveProfit ?? 0).toFixed(2)} USD</div>
-                <div style={{ display: 'flex', height: '8px', background: '#e2e8f0', borderRadius: '2px', overflow: 'hidden' }}>
-                  <div style={{ width: '75%', background: '#16a34a' }}></div>
-                  <div style={{ width: '25%', background: '#fdba74' }}></div>
+                <div className={`text-xs mb-1 ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>Maximal consecutive profit: +{(risks?.maximalConsecutiveProfit ?? 0).toFixed(2)} USD</div>
+                <div className={`flex h-2 rounded-sm overflow-hidden ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}>
+                  <div className="w-[75%] bg-green-500"></div>
+                  <div className="w-[25%] bg-amber-400"></div>
                 </div>
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', marginBottom: '25px', fontSize: '11px', color: '#64748b' }}>
-              <div style={{ textAlign: 'right' }}><span style={{ color: '#881337' }}>Worst trade: {(risks?.worstTrade ?? 0).toFixed(2)} USD</span></div>
-              <div style={{ textAlign: 'right' }}><span style={{ color: '#881337' }}>Maximum consecutive losses: {risks?.maxConsecutiveLosses ?? 0}</span></div>
-              <div style={{ textAlign: 'right' }}><span style={{ color: '#881337' }}>Maximal consecutive loss: {(risks?.maximalConsecutiveLoss ?? 0).toFixed(2)} USD</span></div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 text-[11px]">
+              <div className="sm:text-right"><span className="text-rose-500 font-medium">Worst trade: {(risks?.worstTrade ?? 0).toFixed(2)} USD</span></div>
+              <div className="sm:text-right"><span className="text-rose-500 font-medium">Maximum consecutive losses: {risks?.maxConsecutiveLosses ?? 0}</span></div>
+              <div className="sm:text-right"><span className="text-rose-500 font-medium">Maximal consecutive loss: {(risks?.maximalConsecutiveLoss ?? 0).toFixed(2)} USD</span></div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px' }}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <div style={{ fontSize: '15px', color: '#1e293b', marginBottom: '2px' }}>{(risks?.mfeMaxProfit ?? 0).toFixed(2)} USD</div>
-                <div style={{ fontSize: '11px', color: '#64748b' }}>● MFE (Max. Profit)</div>
+                <div className={`text-sm font-bold mb-0.5 ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>{(risks?.mfeMaxProfit ?? 0).toFixed(2)} USD</div>
+                <div className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>● MFE (Max. Profit)</div>
               </div>
               <div>
-                <div style={{ fontSize: '15px', color: '#1e293b', marginBottom: '2px' }}>{(risks?.avgProfit ?? 0).toFixed(2)} USD</div>
-                <div style={{ fontSize: '11px', color: '#64748b' }}>● Avg. Profit</div>
+                <div className={`text-sm font-bold mb-0.5 ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>{(risks?.avgProfit ?? 0).toFixed(2)} USD</div>
+                <div className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>● Avg. Profit</div>
               </div>
               <div>
-                <div style={{ fontSize: '15px', color: '#881337', marginBottom: '2px' }}>{(risks?.avgLoss ?? 0).toFixed(2)} USD</div>
-                <div style={{ fontSize: '11px', color: '#64748b' }}>● Avg. Loss</div>
+                <div className="text-sm font-bold text-rose-500 mb-0.5">{(risks?.avgLoss ?? 0).toFixed(2)} USD</div>
+                <div className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>● Avg. Loss</div>
               </div>
               <div>
-                <div style={{ fontSize: '15px', color: '#881337', marginBottom: '2px' }}>{(risks?.maeMaxDd ?? 0).toFixed(2)} USD</div>
-                <div style={{ fontSize: '11px', color: '#64748b' }}>● MAE (Max. DD)</div>
+                <div className="text-sm font-bold text-rose-500 mb-0.5">{(risks?.maeMaxDd ?? 0).toFixed(2)} USD</div>
+                <div className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>● MAE (Max. DD)</div>
               </div>
             </div>
           </div>
         )}
 
-        {/* USERS TAB (Fully dynamic based on subscriptionsData periods instead of hardcoded arrays) */}
+        {/* USERS TAB */}
         {activeTab === 'Users' && (
-          <div style={{ fontSize: '12px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#1e293b' }}>Users statistics</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', border: '1px solid #cbd5e1', padding: '2px 6px', borderRadius: '3px', background: '#fff' }}>
-                  <span style={{ width: '8px', height: '8px', background: '#a32a2a', display: 'inline-block' }}></span>
-                  <span style={{ color: '#475569', fontSize: '11px' }}>- Users</span>
+          <div className="text-xs">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+              <div className="flex items-center gap-3">
+                <span className={`text-sm font-bold ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>Users statistics</span>
+                <div className={`flex items-center gap-1.5 border px-2 py-0.5 rounded ${isDark ? 'bg-slate-950 border-slate-800 text-slate-300' : 'bg-white border-slate-300 text-slate-600'}`}>
+                  <span className="w-2 h-2 bg-rose-500 inline-block"></span>
+                  <span className="text-[11px]">- Users</span>
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#475569', fontSize: '11px' }}>
+              <div className={`flex items-center gap-2 text-[11px] ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
                 <span>Show data period:</span>
                 <select 
                   value={subscriptionsPeriod} 
                   onChange={(e) => setSubscriptionsPeriod(e.target.value)}
-                  style={{ border: '1px solid #cbd5e1', padding: '3px 6px', borderRadius: '3px', background: '#fff', fontSize: '11px' }}
+                  className={`border px-2 py-1 rounded text-xs ${isDark ? 'bg-slate-950 border-slate-700 text-slate-100' : 'bg-white border-slate-300 text-slate-800'}`}
                 >
                   <option value="Last year">Last year</option>
                   <option value="All time">All time</option>
@@ -663,15 +650,15 @@ export default function Mql5SignalDashboard() {
               </div>
             </div>
 
-            <div style={{ border: '1px solid #e2e8f0', padding: '12px', borderRadius: '4px', background: '#fff', marginBottom: '25px', position: 'relative' }}>
-              <div style={{ fontSize: '10px', color: '#64748b', position: 'absolute', top: '8px', left: '12px' }}>Count</div>
-              <div style={{ fontSize: '10px', color: '#64748b', position: 'absolute', bottom: '24px', right: '12px' }}>Date</div>
+            <div className={`border p-3 rounded mb-6 relative overflow-x-auto ${isDark ? 'bg-slate-950 border-slate-800' : 'bg-white border-slate-200'}`}>
+              <div className="text-[10px] text-slate-400 absolute top-2 left-3">Count</div>
+              <div className="text-[10px] text-slate-400 absolute bottom-6 right-3">Date</div>
               
-              <svg viewBox={`0 0 ${svgWidth} 140`} style={{ width: '100%', height: '140px', overflow: 'visible', marginTop: '10px' }}>
+              <svg viewBox={`0 0 ${svgWidth} 140`} className="w-full h-[140px] min-w-[500px] overflow-visible mt-2">
                 {[0, 0.5, 1].map((ratio, idx) => {
                   const y = 15 + ratio * 100;
                   return (
-                    <line key={idx} x1={paddingX} y1={y} x2={svgWidth - paddingX} y2={y} stroke="#f1f5f9" strokeWidth="1" />
+                    <line key={idx} x1={paddingX} y1={y} x2={svgWidth - paddingX} y2={y} stroke={isDark ? '#1e293b' : '#f1f5f9'} strokeWidth="1" />
                   );
                 })}
                 {(() => {
@@ -702,46 +689,46 @@ export default function Mql5SignalDashboard() {
 
                   return (
                     <>
-                      <polyline fill="none" stroke="#a32a2a" strokeWidth="2" points={pts} />
+                      <polyline fill="none" stroke="#f43f5e" strokeWidth="2" points={pts} />
                       {subCounts.map((val: number, i: number) => {
                         const x = paddingX + (i / (subCounts.length - 1 || 1)) * (svgWidth - paddingX * 2);
                         const y = 115 - (val / maxSub) * 100;
-                        return <circle key={i} cx={x} cy={y} r="3" fill="#a32a2a" />;
+                        return <circle key={i} cx={x} cy={y} r="3" fill="#f43f5e" />;
                       })}
                       <g transform="translate(350, 25)">
-                        <rect x="0" y="0" width="115" height="18" fill="#fff" stroke="#cbd5e1" rx="2" />
-                        <rect x="5" y="6" width="6" height="6" fill="#a32a2a" />
-                        <text x="16" y="12" fill="#1e293b" fontSize="9">Current - {currentCount} Users</text>
+                        <rect x="0" y="0" width="115" height="18" fill={isDark ? '#0f172a' : '#fff'} stroke={isDark ? '#334155' : '#cbd5e1'} rx="2" />
+                        <rect x="5" y="6" width="6" height="6" fill="#f43f5e" />
+                        <text x="16" y="12" fill={isDark ? '#f1f5f9' : '#1e293b'} fontSize="9">Current - {currentCount} Users</text>
                       </g>
                     </>
                   );
                 })()}
               </svg>
               
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: '#64748b', marginTop: '4px', paddingLeft: '40px', paddingRight: '40px' }}>
+              <div className={`flex justify-between text-[9px] mt-1 px-10 overflow-x-auto gap-4 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                 {((subscriptions?.periods && subscriptions.periods.length > 0) ? subscriptions.periods : [
                   { month: "Sep 2025" }, { month: "Oct 2025" }, { month: "Nov 2025" }, { month: "Dec 2025" },
                   { month: "Jan 2026" }, { month: "Feb 2026" }, { month: "Mar 2026" }, { month: "Apr 2026" },
                   { month: "May 2026" }, { month: "Jun 2026" }, { month: "Jul 2026" }, { month: "Aug 2026" }, { month: "Sep 2026" }
                 ]).map((p: any, i: number) => (
-                  <span key={i}>{p?.month || ''}</span>
+                  <span key={i} className="flex-shrink-0">{p?.month || ''}</span>
                 ))}
               </div>
             </div>
 
-            <div style={{ textAlign: 'center', fontSize: '14px', fontWeight: 'bold', color: '#1e293b', marginBottom: '10px' }}>
+            <div className={`text-center text-sm font-bold mb-2 ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>
               Income
             </div>
 
-            <div style={{ border: '1px solid #e2e8f0', padding: '12px', borderRadius: '4px', background: '#fff', marginBottom: '25px', position: 'relative' }}>
-              <div style={{ fontSize: '10px', color: '#64748b', position: 'absolute', top: '8px', left: '12px' }}>USD</div>
-              <div style={{ fontSize: '10px', color: '#64748b', position: 'absolute', bottom: '24px', right: '12px' }}>Date</div>
+            <div className={`border p-3 rounded mb-6 relative overflow-x-auto ${isDark ? 'bg-slate-950 border-slate-800' : 'bg-white border-slate-200'}`}>
+              <div className="text-[10px] text-slate-400 absolute top-2 left-3">USD</div>
+              <div className="text-[10px] text-slate-400 absolute bottom-6 right-3">Date</div>
               
-              <svg viewBox={`0 0 ${svgWidth} 140`} style={{ width: '100%', height: '140px', overflow: 'visible', marginTop: '10px' }}>
+              <svg viewBox={`0 0 ${svgWidth} 140`} className="w-full h-[140px] min-w-[500px] overflow-visible mt-2">
                 {[0, 0.5, 1].map((ratio, idx) => {
                   const y = 15 + ratio * 100;
                   return (
-                    <line key={idx} x1={paddingX} y1={y} x2={svgWidth - paddingX} y2={y} stroke="#f1f5f9" strokeWidth="1" />
+                    <line key={idx} x1={paddingX} y1={y} x2={svgWidth - paddingX} y2={y} stroke={isDark ? '#1e293b' : '#f1f5f9'} strokeWidth="1" />
                   );
                 })}
                 {(() => {
@@ -772,46 +759,46 @@ export default function Mql5SignalDashboard() {
 
                   return (
                     <>
-                      <polyline fill="none" stroke="#16a34a" strokeWidth="2.5" points={pts} />
+                      <polyline fill="none" stroke="#22c55e" strokeWidth="2.5" points={pts} />
                       {incomeVals.map((val: number, i: number) => {
                         const x = paddingX + (i / (incomeVals.length - 1 || 1)) * (svgWidth - paddingX * 2);
                         const y = 115 - (val / maxInc) * 100;
-                        return <circle key={i} cx={x} cy={y} r="3.5" fill="#16a34a" />;
+                        return <circle key={i} cx={x} cy={y} r="3.5" fill="#22c55e" />;
                       })}
                       <g transform="translate(330, 25)">
-                        <rect x="0" y="0" width="135" height="18" fill="#fff" stroke="#cbd5e1" rx="2" />
-                        <rect x="5" y="6" width="6" height="6" fill="#16a34a" />
-                        <text x="16" y="12" fill="#1e293b" fontSize="9">Total - ${totalIncome.toLocaleString()} USD</text>
+                        <rect x="0" y="0" width="135" height="18" fill={isDark ? '#0f172a' : '#fff'} stroke={isDark ? '#334155' : '#cbd5e1'} rx="2" />
+                        <rect x="5" y="6" width="6" height="6" fill="#22c55e" />
+                        <text x="16" y="12" fill={isDark ? '#f1f5f9' : '#1e293b'} fontSize="9">Total - ${totalIncome.toLocaleString()} USD</text>
                       </g>
                     </>
                   );
                 })()}
               </svg>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: '#64748b', marginTop: '4px', paddingLeft: '40px', paddingRight: '40px' }}>
+              <div className={`flex justify-between text-[9px] mt-1 px-10 overflow-x-auto gap-4 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                 {((subscriptions?.periods && subscriptions.periods.length > 0) ? subscriptions.periods : [
                   { month: "Sep 2025" }, { month: "Oct 2025" }, { month: "Nov 2025" }, { month: "Dec 2025" },
                   { month: "Jan 2026" }, { month: "Feb 2026" }, { month: "Mar 2026" }, { month: "Apr 2026" },
                   { month: "May 2026" }, { month: "Jun 2026" }, { month: "Jul 2026" }, { month: "Aug 2026" }, { month: "Sep 2026" }
                 ]).map((p: any, i: number) => (
-                  <span key={i}>{p?.month || ''}</span>
+                  <span key={i} className="flex-shrink-0">{p?.month || ''}</span>
                 ))}
               </div>
             </div>
 
-            <div style={{ textAlign: 'center', fontSize: '14px', fontWeight: 'bold', color: '#1e293b', marginBottom: '10px' }}>
+            <div className={`text-center text-sm font-bold mb-2 ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>
               Geography of our users
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '15px' }}>
-              <input type="radio" checked readOnly style={{ accentColor: '#0284c7' }} />
-              <span style={{ fontSize: '11px', color: '#1e293b' }}>Users</span>
+            <div className="flex items-center gap-1.5 mb-3">
+              <input type="radio" checked readOnly className="accent-sky-500" />
+              <span className={`text-xs ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>Users</span>
             </div>
 
-            <div style={{ border: '1px solid #e2e8f0', padding: '20px', borderRadius: '4px', background: '#fff', textAlign: 'center', minHeight: '380px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+            <div className={`border p-4 rounded text-center min-h-[380px] flex flex-col items-center justify-center relative overflow-hidden ${isDark ? 'bg-slate-950 border-slate-800' : 'bg-white border-slate-200'}`}>
               <svg
                 viewBox="0 0 950 620"
                 preserveAspectRatio="xMidYMid meet"
-                style={{ display: 'block', width: '100%', maxWidth: '850px', height: 'auto', aspectRatio: '950 / 620' }}
+                className="block w-full max-w-[850px] h-auto"
               >
                 <image
                   href="/world-map.svg"
@@ -820,11 +807,11 @@ export default function Mql5SignalDashboard() {
                   width="950"
                   height="620"
                   preserveAspectRatio="xMidYMid meet"
-                  opacity="0.75"
-                  style={{ filter: 'invert(90%) sepia(12%) saturate(260%) hue-rotate(75deg) brightness(108%) contrast(82%)' }}
+                  opacity={isDark ? '0.45' : '0.75'}
+                  style={{ filter: isDark ? 'invert(92%) sepia(8%) saturate(300%) hue-rotate(180deg) brightness(95%) contrast(90%)' : 'invert(90%) sepia(12%) saturate(260%) hue-rotate(75deg) brightness(108%) contrast(82%)' }}
                 />
-                <g transform={`translate(${registeredMapPoint.x}, ${registeredMapPoint.y})`} opacity="0.175" fill="none" stroke={theme === 'light' ? '#a8e6b9' : '#bbf7d0'} strokeWidth="3">
-                  <circle r="7" fill="#dcfce7" stroke="#86efac" strokeWidth="2">
+                <g transform={`translate(${registeredMapPoint.x}, ${registeredMapPoint.y})`} opacity="0.175" fill="none" stroke={isDark ? '#38bdf8' : '#86efac'} strokeWidth="3">
+                  <circle r="7" fill={isDark ? '#0284c7' : '#dcfce7'} stroke={isDark ? '#38bdf8' : '#86efac'} strokeWidth="2">
                     <animate attributeName="r" from="7" to="900" dur="7s" repeatCount="indefinite" />
                     <animate attributeName="opacity" from="0.8" to="0" dur="7s" repeatCount="indefinite" />
                   </circle>
@@ -832,25 +819,25 @@ export default function Mql5SignalDashboard() {
                     <animate attributeName="r" from="7" to="900" dur="7s" begin="2.3s" repeatCount="indefinite" />
                     <animate attributeName="opacity" from="0.8" to="0" dur="7s" begin="2.3s" repeatCount="indefinite" />
                   </circle>
-                  <circle r="5" fill={theme === 'light' ? '#72d48f' : '#86efac'} stroke={theme === 'light' ? '#d5f5df' : '#f0fdf4'} strokeWidth="2" />
+                  <circle r="5" fill="#38bdf8" stroke="#0f172a" strokeWidth="2" />
                 </g>
                 <g transform={`translate(${registeredMapPoint.x}, ${registeredMapPoint.y})`}>
-                  <circle r="10" fill="#0284c7" opacity="0.25" />
-                  <circle r="4" fill="#0284c7" stroke="#fff" strokeWidth="1.5" />
-                  <text x="0" y="-8" fill="#0284c7" fontSize="7" fontWeight="bold" textAnchor="middle">You</text>
+                  <circle r="10" fill="#38bdf8" opacity="0.35" />
+                  <circle r="4" fill="#38bdf8" stroke="#fff" strokeWidth="1.5" />
+                  <text x="0" y="-8" fill="#38bdf8" fontSize="7" fontWeight="bold" textAnchor="middle">You</text>
                 </g>
                 {mapMarkers.map(({ label, latitude, longitude }) => {
                   const { x, y } = toMapPoint(latitude, longitude);
                   return (
                   <g key={label} transform={`translate(${x}, ${y})`}>
-                    <circle cx="0" cy="0" r="10" fill="#0284c7" opacity="0.25" />
-                    <circle cx="0" cy="0" r="4" fill="#0284c7" stroke="#fff" strokeWidth="1.5" />
-                    <text x="0" y="-8" fill="#0284c7" fontSize="7" fontWeight="bold" textAnchor="middle">{label}</text>
+                    <circle cx="0" cy="0" r="10" fill="#38bdf8" opacity="0.35" />
+                    <circle cx="0" cy="0" r="4" fill="#38bdf8" stroke="#fff" strokeWidth="1.5" />
+                    <text x="0" y="-8" fill="#38bdf8" fontSize="7" fontWeight="bold" textAnchor="middle">{label}</text>
                   </g>
                   );
                 })}
               </svg>
-              <div style={{ fontSize: '11px', color: '#64748b', marginTop: '10px' }}>
+              <div className={`text-[11px] mt-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                 📍 Pins indicate active review locations and subscriber distribution across realistic world political regions.
               </div>
             </div>
@@ -858,45 +845,45 @@ export default function Mql5SignalDashboard() {
         )}
 
         {activeTab === 'Description' && (
-          <div style={{ fontSize: '13px', lineHeight: '1.6' }}>
-            <p style={{ margin: '0 0 12px 0', fontSize: '15px', fontWeight: 'bold', color: '#0284c7' }}>About GoldMaster Expert Advisor</p>
+          <div className={`text-xs sm:text-sm leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+            <p className="mb-3 text-base font-bold text-sky-400">About GoldMaster Expert Advisor</p>
             
-            <p style={{ margin: '0 0 4px 0', fontWeight: 'bold', color: '#0284c7', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <p className="mb-1 font-bold text-sky-400 flex items-center gap-1.5">
               <span>⚙️</span> Architecture & Value
             </p>
-            <p style={{ margin: '0 0 8px 0' }}>
-              <strong>Operational Principle:</strong> The algorithm functions as an automated trading system on the MetaTrader 5 (MT5) platform, executing market operations based on precise, pre-programmed technical rules without manual emotional interference. It processes high-volatility asset price action smoothly, maintaining low drawdown metrics and stable execution even during sudden market spikes.
+            <p className="mb-2">
+              <strong className={isDark ? 'text-slate-100' : 'text-slate-900'}>Operational Principle:</strong> The algorithm functions as an automated trading system on the MetaTrader 5 (MT5) platform, executing market operations based on precise, pre-programmed technical rules without manual emotional interference. It processes high-volatility asset price action smoothly, maintaining low drawdown metrics and stable execution even during sudden market spikes.
             </p>
-            <p style={{ margin: '0 0 8px 0' }}>
-              <strong>Theoretical Foundation:</strong> The strategy is built upon structured risk management principles, prioritizing predefined Stop Loss (SL) and Take Profit (TP) levels for every position. By combining mathematically rigorous backtesting models with live execution precision, the algorithm minimizes human cognitive bias and relies on systematic quantitative parameters.
+            <p className="mb-2">
+              <strong className={isDark ? 'text-slate-100' : 'text-slate-900'}>Theoretical Foundation:</strong> The strategy is built upon structured risk management principles, prioritizing predefined Stop Loss (SL) and Take Profit (TP) levels for every position. By combining mathematically rigorous backtesting models with live execution precision, the algorithm minimizes human cognitive bias and relies on systematic quantitative parameters.
             </p>
-            <p style={{ margin: '0 0 16px 0' }}>
-              <strong>Core Value Proposition for Traders:</strong> Users select this solution for its robust code architecture, low historical drawdown, and reliable performance on demanding instruments like XAUUSD. Furthermore, active developer engagement through community channels ensures rapid troubleshooting, seamless setup guidance, and continuous maintenance.
+            <p className="mb-4">
+              <strong className={isDark ? 'text-slate-100' : 'text-slate-900'}>Core Value Proposition for Traders:</strong> Users select this solution for its robust code architecture, low historical drawdown, and reliable performance on demanding instruments like XAUUSD. Furthermore, active developer engagement through community channels ensures rapid troubleshooting, seamless setup guidance, and continuous maintenance.
             </p>
 
-            <p style={{ margin: '0 0 8px 0', fontWeight: 'bold', color: '#0284c7' }}>For more detailed information, please check the following links:</p>
-            <ul style={{ margin: '0 0 0 20px', padding: '0', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <p className={`mb-2 font-bold ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>For more detailed information, please check the following links:</p>
+            <ul className="list-none pl-0 flex flex-col gap-1.5">
+              <li className="flex items-center gap-1.5">
                 <span>📥</span>
-                <a href="/guides?guide=backtests" style={{ color: '#0284c7', textDecoration: 'underline' }}>
+                <a href="/guides?guide=backtests" className="text-sky-400 underline hover:text-sky-300">
                   Instructions for downloading the demo version and running backtests.
                 </a>
               </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <li className="flex items-center gap-1.5">
                 <span>👥</span>
-                <a href="/guides?guide=copy-trading" style={{ color: '#0284c7', textDecoration: 'underline' }}>
+                <a href="/guides?guide=copy-trading" className="text-sky-400 underline hover:text-sky-300">
                   Guide on how to copy trade by following BJ.
                 </a>
               </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <li className="flex items-center gap-1.5">
                 <span>🤖</span>
-                <a href="/guides?guide=ea-rental" style={{ color: '#0284c7', textDecoration: 'underline' }}>
+                <a href="/guides?guide=ea-rental" className="text-sky-400 underline hover:text-sky-300">
                   Instructions for renting and operating the Gold Master robot.
                 </a>
               </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <li className="flex items-center gap-1.5">
                 <span>📖</span>
-                <a href="/guides?guide=freedom-algorithm" style={{ color: '#0284c7', textDecoration: 'underline' }}>
+                <a href="/guides?guide=freedom-algorithm" className="text-sky-400 underline hover:text-sky-300">
                   Purchasing the book &quot;Freedom Algorithm&quot; written by Mr. BJ.
                 </a>
               </li>
@@ -905,25 +892,25 @@ export default function Mql5SignalDashboard() {
         )}
 
         {activeTab === 'Reviews' && (
-          <div style={{ fontSize: '13px', color: '#1e293b' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div className={`text-xs sm:text-sm ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+            <div className="flex flex-col gap-5">
               
               {/* Review 1 */}
-              <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '15px' }}>
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#fff', flexShrink: 0 }}>
+              <div className={`border-b pb-4 ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
+                <div className="flex gap-3 items-start">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0 ${isDark ? 'bg-slate-800 text-slate-200' : 'bg-slate-300 text-white'}`}>
                     RT
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontWeight: 'bold', color: '#0284c7' }}>Richard Thibodeau</span>
-                        <span style={{ fontSize: '11px', color: '#64748b' }}>2026.09.04 02:28</span>
-                        <span style={{ color: '#eab308', fontSize: '12px' }}>★ 5.0</span>
+                  <div className="flex-1">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-1 gap-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-bold text-sky-400">Richard Thibodeau</span>
+                        <span className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>2026.09.04 02:28</span>
+                        <span className="text-yellow-500 text-xs">★ 5.0</span>
                       </div>
-                      <span style={{ fontSize: '11px', color: '#94a3b8' }}>North America (USA)</span>
+                      <span className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-400'}`}>North America (USA)</span>
                     </div>
-                    <p style={{ margin: '4px 0', color: '#334155', lineHeight: '1.5' }}>
+                    <p className={`my-1 leading-normal ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
                       Purchased GoldMaster on the very first day as I trust BJ&apos;s skills 100% Very good so far, will be back in a few weeks to edit my review if it was wrong. Thanks, Sir BJ.
                     </p>
                   </div>
@@ -931,21 +918,21 @@ export default function Mql5SignalDashboard() {
               </div>
 
               {/* Review 2 */}
-              <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '15px' }}>
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#fff', flexShrink: 0 }}>
+              <div className={`border-b pb-4 ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
+                <div className="flex gap-3 items-start">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0 ${isDark ? 'bg-slate-800 text-slate-200' : 'bg-slate-300 text-white'}`}>
                     HM
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontWeight: 'bold', color: '#0284c7' }}>Hans Mueller</span>
-                        <span style={{ fontSize: '11px', color: '#64748b' }}>2026.09.03 19:45</span>
-                        <span style={{ color: '#eab308', fontSize: '12px' }}>★ 5.0</span>
+                  <div className="flex-1">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-1 gap-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-bold text-sky-400">Hans Mueller</span>
+                        <span className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>2026.09.03 19:45</span>
+                        <span className="text-yellow-500 text-xs">★ 5.0</span>
                       </div>
-                      <span style={{ fontSize: '11px', color: '#94a3b8' }}>Europe (Germany)</span>
+                      <span className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-400'}`}>Europe (Germany)</span>
                     </div>
-                    <p style={{ margin: '4px 0', color: '#334155', lineHeight: '1.5' }}>
+                    <p className={`my-1 leading-normal ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
                       Excellent First Impression - GoldMaster EA. I purchased this EA just yesterday, and today it already delivered its first profitable trade. I really like the way it approaches trading, especially the use of clearly defined Stop Loss and Take Profit levels, which gives me confidence in its structured risk management. Outstanding performance!
                     </p>
                   </div>
@@ -953,21 +940,21 @@ export default function Mql5SignalDashboard() {
               </div>
 
               {/* Review 3 */}
-              <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '15px' }}>
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#fff', flexShrink: 0 }}>
+              <div className={`border-b pb-4 ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
+                <div className="flex gap-3 items-start">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0 ${isDark ? 'bg-slate-800 text-slate-200' : 'bg-slate-300 text-white'}`}>
                     KT
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontWeight: 'bold', color: '#0284c7' }}>Kenji Takahashi</span>
-                        <span style={{ fontSize: '11px', color: '#64748b' }}>2026.09.02 12:10</span>
-                        <span style={{ color: '#eab308', fontSize: '12px' }}>★ 5.0</span>
+                  <div className="flex-1">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-1 gap-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-bold text-sky-400">Kenji Takahashi</span>
+                        <span className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>2026.09.02 12:10</span>
+                        <span className="text-yellow-500 text-xs">★ 5.0</span>
                       </div>
-                      <span style={{ fontSize: '11px', color: '#94a3b8' }}>Asia (Japan)</span>
+                      <span className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-400'}`}>Asia (Japan)</span>
                     </div>
-                    <p style={{ margin: '4px 0', color: '#334155', lineHeight: '1.5' }}>
+                    <p className={`my-1 leading-normal ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
                       Very stable execution on XAUUSD. Gold trading is notoriously difficult due to high volatility, but this algorithm handles market spikes smoothly. Low drawdown and consistent gains over the past week. Highly recommended for serious traders.
                     </p>
                   </div>
@@ -975,21 +962,21 @@ export default function Mql5SignalDashboard() {
               </div>
 
               {/* Review 4 */}
-              <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '15px' }}>
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#fff', flexShrink: 0 }}>
+              <div className={`border-b pb-4 ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
+                <div className="flex gap-3 items-start">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0 ${isDark ? 'bg-slate-800 text-slate-200' : 'bg-slate-300 text-white'}`}>
                     LS
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontWeight: 'bold', color: '#0284c7' }}>Lucas Silva</span>
-                        <span style={{ fontSize: '11px', color: '#64748b' }}>2026.09.01 08:30</span>
-                        <span style={{ color: '#eab308', fontSize: '12px' }}>★ 5.0</span>
+                  <div className="flex-1">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-1 gap-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-bold text-sky-400">Lucas Silva</span>
+                        <span className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>2026.09.01 08:30</span>
+                        <span className="text-yellow-500 text-xs">★ 5.0</span>
                       </div>
-                      <span style={{ fontSize: '11px', color: '#94a3b8' }}>South America (Brazil)</span>
+                      <span className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-400'}`}>South America (Brazil)</span>
                     </div>
-                    <p style={{ margin: '4px 0', color: '#334155', lineHeight: '1.5' }}>
+                    <p className={`my-1 leading-normal ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
                       Amazing support and robust code architecture. Tested it on a demo account first and now running live. The developer is very active and answers questions promptly. Great addition to my portfolio!
                     </p>
                   </div>
@@ -997,21 +984,21 @@ export default function Mql5SignalDashboard() {
               </div>
 
               {/* Review 5 */}
-              <div style={{ paddingBottom: '5px' }}>
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: '#fff', flexShrink: 0 }}>
+              <div className="pb-1">
+                <div className="flex gap-3 items-start">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0 ${isDark ? 'bg-slate-800 text-slate-200' : 'bg-slate-300 text-white'}`}>
                     LN
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontWeight: 'bold', color: '#0284c7' }}>Liam Ndlovu</span>
-                        <span style={{ fontSize: '11px', color: '#64748b' }}>2026.08.30 15:20</span>
-                        <span style={{ color: '#eab308', fontSize: '12px' }}>★ 5.0</span>
+                  <div className="flex-1">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-1 gap-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-bold text-sky-400">Liam Ndlovu</span>
+                        <span className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>2026.08.30 15:20</span>
+                        <span className="text-yellow-500 text-xs">★ 5.0</span>
                       </div>
-                      <span style={{ fontSize: '11px', color: '#94a3b8' }}>Africa (South Africa)</span>
+                      <span className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-400'}`}>Africa (South Africa)</span>
                     </div>
-                    <p style={{ margin: '4px 0', color: '#334155', lineHeight: '1.5' }}>
+                    <p className={`my-1 leading-normal ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
                       Clean setup instructions and excellent performance on MT5. The backtests matched the initial live results closely. Truly impressed by the precision of this automated strategy.
                     </p>
                   </div>
