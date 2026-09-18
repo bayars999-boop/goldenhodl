@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/utils/supabase/client' // Таны төслийн supabase client импортлох зам
+import { createClient } from '../../utils/supabase/client' // Таны төслийн supabase client импортлох зам
 import { useRouter } from 'next/navigation'
 
 export default function ResetPasswordPage() {
