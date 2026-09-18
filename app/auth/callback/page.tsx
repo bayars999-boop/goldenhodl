@@ -1,52 +1,32 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/utils/supabase/client' // Client талын Supabase client
 
 export default function AuthCallbackPage() {
-  const router = useRouter();
-  const [message, setMessage] = useState('Completing secure authentication…');
+  const router = useRouter()
+  const supabase = createClient()
 
   useEffect(() => {
-    const fail = (text: string) => { setMessage(text); window.setTimeout(() => router.replace('/login'), 2500); };
-    const finish = async () => {
-      const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
-      const query = new URLSearchParams(window.location.search);
-      const type = hash.get('type') || query.get('type') || 'signup';
-      let accessToken = hash.get('access_token');
-      let email = '';
-      const tokenHash = query.get('token_hash');
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-      if (!accessToken && tokenHash && supabaseUrl && anonKey) {
-        const verifyResponse = await fetch(`${supabaseUrl}/auth/v1/verify`, { method: 'POST', headers: { apikey: anonKey, 'Content-Type': 'application/json' }, body: JSON.stringify({ token_hash: tokenHash, type }) });
-        const verified = await verifyResponse.json() as { access_token?: string; user?: { email?: string } };
-        if (verifyResponse.ok && verified.access_token) {
-          accessToken = verified.access_token;
-          email = (verified.user?.email || '').toLowerCase();
+    // URL дээрх #hash утгуудыг шалгаж сесс үүсгэх
+    const hash = window.location.hash
+    if (hash && hash.includes('type=recovery')) {
+      // Supabase client автоматаар hash дээрх token-ийг уншиж сесс болгоно
+      supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'PASSWORD_RECOVERY' || session) {
+          router.push('/reset-password')
         }
-      }
-      if (accessToken && !email) {
-        try { email = ((JSON.parse(atob(accessToken.split('.')[1])) as { email?: string }).email || '').toLowerCase(); } catch { email = ''; }
-      }
+      })
+    } else {
+      // Хэрэв код эсвэл token байхгүй бол нэвтрэх хуудас руу буцаах
+      router.push('/login?error=Invalid recovery link')
+    }
+  }, [router, supabase])
 
-      if (!accessToken) {
-        if (query.get('code')) { router.replace('/login?confirmed=1'); return; }
-        fail('This link is invalid or has expired. Request a new one.');
-        return;
-      }
-
-      if (type === 'recovery') {
-        const sessionResponse = await fetch('/api/auth/reset/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ accessToken, email }) });
-        if (sessionResponse.ok) { router.replace('/login?step=new-password'); return; }
-        fail('Unable to start the password reset session. Request a new reset link.');
-        return;
-      }
-      router.replace('/login?confirmed=1');
-    };
-    finish().catch(() => fail('This link is invalid or has expired. Request a new one.'));
-  }, [router]);
-
-  return <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Arial, sans-serif', background: '#f8fafc', color: '#1e293b', padding: '15px' }}><p style={{ fontSize: '14px' }}>{message}</p></main>;
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <p className="text-gray-600">Баталгаажуулж байна, түр хүлээнэ үү...</p>
+    </div>
+  )
 }
