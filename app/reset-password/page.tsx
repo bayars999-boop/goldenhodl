@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '../../../utils/supabase/client' // Төслийн бүтэц дэх замтайгаа тохируулаарай
+import { createClient } from '@/utils/supabase/client' // Төслийн бүтэц дэх замтайгаа тохируулаарай
 import { useRouter } from 'next/navigation'
 
 export default function ResetPasswordPage() {
