@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '../utils/supabase/client' // Таны төслийн supabase client импортлох зам
+import { createClient } from '@/utils/supabase/client' // Төслийн бүтэц дэх замтайгаа тохируулаарай
 import { useRouter } from 'next/navigation'
 
 export default function ResetPasswordPage() {
@@ -28,16 +28,16 @@ export default function ResetPasswordPage() {
     }
 
     // 2. Supabase updateUser ашиглан нууц үгийг шинэчлэх
-    const { data, error } = await supabase.auth.updateUser({
+    const { error: updateError } = await supabase.auth.updateUser({
       password: password,
     })
 
-    if (error) {
-      setError(error.message)
+    if (updateError) {
+      setError(updateError.message)
     } else {
       setMessage('Нууц үг амжилттай шинэчлэгдлээ! Түр хүлээнэ үү...')
       setTimeout(() => {
-        router.push('/login') // Амжилттай солигдсоны дараа нэвтрэх хуудас руу шилжүүлэх
+        router.push('/login')
       }, 2000)
     }
 
@@ -81,7 +81,7 @@ export default function ResetPasswordPage() {
           disabled={loading}
           className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 disabled:opacity-50"
         >
-          {loading.toString() === 'true' || loading ? 'Хүлээгдэж байна...' : 'Нууц үг шинэчлэх'}
+          {loading ? 'Хүлээгдэж байна...' : 'Нууц үг шинэчлэх'}
         </button>
       </form>
     </div>
