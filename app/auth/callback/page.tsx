@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/utils/supabase/client' // Төслийнхөө замтай тохируулаарай
+import { createClient } from '../../../utils/supabase/client' // Төслийнхөө замтай тохируулаарай
 
 export default function AuthCallbackPage() {
   const router = useRouter()
