@@ -13,6 +13,7 @@
     "ci": "npm run check:privacy-matrix && npm run check:data-location && npm run check:security-controls && npm run lint && npm run build"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
     "@types/bcrypt": "^6.0.0",
     "bcrypt": "^6.0.0",
     "next": "16.3.4",
