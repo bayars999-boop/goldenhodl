@@ -182,8 +182,8 @@ export default function Mql5SignalDashboard() {
               <span className={`text-base sm:text-xl font-semibold leading-snug ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>IF YOU WANT LONG TERM STABLE PROFITS, JOIN US.</span>
             </div>
             <div className="flex gap-2 w-full sm:w-auto justify-center">
-              <button type="button" onClick={() => { window.location.href = '/signin'; }} className="flex-1 sm:flex-none bg-transparent border border-green-500 text-green-500 px-4 py-2 rounded font-semibold text-sm hover:bg-green-500/10 transition">Sign in</button>
-              <button type="button" onClick={() => { window.location.href = '/login'; }} className="flex-1 sm:flex-none bg-green-600 border border-green-600 text-white px-4 py-2 rounded font-semibold text-sm hover:bg-green-700 transition">Log in</button>
+              <button type="button" onClick={() => { window.location.href = '/signup'; }} className="flex-1 sm:flex-none bg-transparent border border-green-500 text-green-500 px-4 py-2 rounded font-semibold text-sm hover:bg-green-500/10 transition">Sign Up</button>
+              <button type="button" onClick={() => { window.location.href = '/login'; }} className="flex-1 sm:flex-none bg-green-600 border border-green-600 text-white px-4 py-2 rounded font-semibold text-sm hover:bg-green-700 transition">Log In</button>
             </div>
           </div>
           <div className="flex items-center gap-3 flex-wrap mt-4 text-xs sm:text-sm">
