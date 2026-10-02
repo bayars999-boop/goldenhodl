@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { VertexAI } from '@google-cloud/vertexai';
 
-// Vertex AI-г initialize хийхдээ apiKey-г шууд үндсэн түвшинд өгөх
+// Vertex AI-г initialize хийх (Vertex AI нь apiKey ашигладаггүй, төсөл болон location-оор холбогдоно)
 const vertexAI = new VertexAI({
   project: process.env.GOOGLE_CLOUD_PROJECT || 'gen-lang-client-0410335332',
   location: process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
-  apiKey: process.env.VERTEX_API_KEY, // Үндсэн объект руу шилжүүлэв
 });
 
 const model = 'gemini-2.5-flash';
@@ -32,6 +31,7 @@ export async function POST(req: NextRequest) {
     const generativeModel = vertexAI.getGenerativeModel({
       model: model,
       systemInstruction: {
+        role: 'system',
         parts: [{ text: SYSTEM_PROMPT }]
       },
     });
