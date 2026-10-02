@@ -11,7 +11,7 @@ import ConsentField from '../consent-field';
 type Step = 'register' | 'risk' | 'captcha' | 'otp' | 'complete';
 type Country = { name: string; code: string; dial: string };
 
-const countryCodes = Array.from(new Set('AF AX AL DZ AS AD AO AI AQ AG AR AM AW AU AT AZ BS BH BD BB BY BE BZ BJ BM BT BO BQ BA BW BV BR IO BN BG BF BI CV KH CM CA KY CF TD CL CN CX CC CO KM CD CG CK CR CI HR CU CW CY CZ DK DJ DM DO EC EG SV GQ ER EE SZ ET FK FO FJ FI FR GF PF TF GA GM GE DE GH GI GR GL GD GP GU GT GG GN GW GY HT HM VA HN HK HU IS IN ID IR IQ IE IM IT IT JM JP JE JO KZ KE KI KP KR KW KG LA LV LB LS LR LY LI LT LU MO MG MW MY MV MT MH MQ MR MU YT FM MD MC MN ME MS MA MZ NA NR NP NL NC NZ NI NE NG NU NF MP MP NO OM PK PW PS PA PG PY PE PH PN PL PT PR QA RE RO RU RW BL SH KN LC MF PM VC WS SM ST SA SN RS SC SL SG SX SK SI SB SO ZA GS SS ES LK SD SJ SE CH SY TW TJ TZ TH TL TG TK TO TT TN TR TM TC TV UG UA AE GB US UM UY UZ VU VE VN VG VI WF EH YE ZM ZW'.split(' ')));
+const countryCodes = Array.from(new Set('AF AX AL DZ AS AD AO AI AQ AG AR AM AW AU AT AZ BS BH BD BB BY BE BZ BJ BM BT BO BQ BA BW BV BR IO BN BG BF BI CV KH CM CA KY CF TD CL CN CX CC CC CO KM CD CG CK CR CI HR CU CW CY CZ DK DJ DM DO EC EG SV GQ ER EE SZ ET FK FO FJ FI FR GF PF TF GA GM GE DE GH GI GR GL GD GP GU GT GG GN GW GY HT HM VA HN HK HU IS IN ID IR IQ IE IM IT IT JM JP JE JO KZ KE KI KP KR KW KG LA LV LB LS LR LY LI LT LU MO MG MW MY MV MT MH MQ MR MU YT FM MD MC MN ME MS MA MZ NA NR NP NL NC NZ NI NE NG NU NF MP MP NO OM PK PW PS PA PG PY PE PH PN PL PT PR QA RE RO RU RW BL SH KN LC MF PM VC WS SM ST SA SN RS SC SL SG SX SK SI SB SO ZA GS SS ES LK SD SJ SE CH SY TW TJ TZ TH TL TG TK TO TT TN TR TM TC TV UG UA AE GB US UM UY UZ VU VE VN VG VI WF EH YE ZM ZW'.split(' ')));
 const dialCodes: Record<string, string> = {
   AF: '+93', AX: '+358', AL: '+355', DZ: '+213', AS: '+1-684', AD: '+376', AO: '+244', AI: '+1-264', AQ: '+672', AG: '+1-268', AR: '+54', AM: '+374', AW: '+297', AU: '+61', AT: '+43', AZ: '+994', BS: '+1-242', BH: '+973', BD: '+880', BB: '+1-246', BY: '+375', BE: '+32', BZ: '+501', BJ: '+229', BM: '+1-441', BT: '+975', BO: '+591', BQ: '+599', BA: '+387', BW: '+267', BV: '+47', BR: '+55', IO: '+246', BN: '+673', BG: '+359', BF: '+226', BI: '+257', CV: '+238', KH: '+855', CM: '+237', CA: '+1', KY: '+1-345', CF: '+236', TD: '+235', CL: '+56', CN: '+86', CX: '+61', CC: '+61', CO: '+57', KM: '+269', CD: '+243', CG: '+242', CK: '+682', CR: '+506', CI: '+225', HR: '+385', CU: '+53', CW: '+599', CY: '+357', CZ: '+420', DK: '+45', DJ: '+253', DM: '+1-767', DO: '+1-809', EC: '+593', EG: '+20', SV: '+503', GQ: '+240', ER: '+291', EE: '+372', SZ: '+268', ET: '+251', FK: '+500', FO: '+298', FI: '+358', FR: '+33', GF: '+594', PF: '+689', TF: '+262', GA: '+241', GM: '+220', GE: '+995', DE: '+49', GH: '+233', GI: '+350', GR: '+30', GL: '+299', GD: '+1-473', GP: '+590', GU: '+1-671', GT: '+502', GG: '+44', GN: '+224', GW: '+245', GY: '+592', HT: '+509', HM: '+61', VA: '+379', HN: '+504', HK: '+852', HU: '+36', IS: '+354', IN: '+91', ID: '+62', IR: '+98', IQ: '+964', IE: '+353', IM: '+44', IL: '+972', IT: '+39', JM: '+1-876', JP: '+81', JE: '+44', JO: '+962', KZ: '+7', KE: '+254', KI: '+686', KP: '+850', KR: '+82', KW: '+965', KG: '+996', LA: '+856', LV: '+371', LB: '+961', LS: '+266', LR: '+231', LY: '+218', LI: '+423', LT: '+370', LU: '+352', MO: '+853', MG: '+261', MW: '+265', MY: '+60', MV: '+960', ML: '+223', MT: '+356', MH: '+692', MQ: '+596', MR: '+222', MU: '+230', YT: '+262', FM: '+691', MD: '+373', MC: '+377', MN: '+976', ME: '+382', MS: '+1-664', MA: '+212', MZ: '+258', NA: '+264', NR: '+674', NP: '+977', NL: '+31', NC: '+687', NZ: '+64', NI: '+505', NE: '+227', NG: '+234', NU: '+683', NF: '+672', MP: '+1-670', NO: '+47', OM: '+968', PK: '+92', PW: '+680', PS: '+970', PA: '+507', PG: '+675', PY: '+595', PE: '+51', PH: '+63', PN: '+64', PT: '+351', PR: '+1', QA: '+974', RE: '+262', RO: '+40', RU: '+7', RW: '+250', BL: '+590', SH: '+290', KN: '+1-869', LC: '+1-758', MF: '+590', PM: '+508', VC: '+1-784', WS: '+685', SM: '+378', ST: '+239', SA: '+966', SN: '+221', RS: '+381', SC: '+248', SL: '+232', SG: '+65', SX: '+599', SK: '+421', SI: '+386', SB: '+677', SO: '+252', ZA: '+27', GS: '+500', SS: '+211', ES: '+34', LK: '+94', SD: '+249', SJ: '+47', SE: '+46', CH: '+41', SY: '+963', TW: '+886', TJ: '+992', TZ: '+255', TH: '+66', TL: '+670', TG: '+228', TK: '+690', TO: '+676', TT: '+1-868', TN: '+216', TR: '+90', TM: '+993', TC: '+1-649', TV: '+688', UG: '+256', UA: '+380', AE: '+971', GB: '+44', US: '+1', UM: '+1', UY: '+598', UZ: '+998', VU: '+678', VE: '+58', VN: '+84', VG: '+1-284', VI: '+1-340', WF: '+681', EH: '+212', YE: '+967', ZM: '+260', ZW: '+263'
 };
@@ -153,15 +153,28 @@ export default function CopyTradingPage() {
         }),
       });
 
-      // Хэрэв бэкенд API байхгүй эсвэл 404/500 алдаа өгвөл алдаа гаргаж гацахгүйгээр шууд шалгах шатанд шилжүүлнэ
+      const data = await response.json().catch(() => ({}));
+
       if (!response.ok) {
-        console.warn('Backend API route not found or failed, switching to client-side verification flow.');
+        // Бэкенд эсвэл Supabase-ээс буцаж буй алдааны мессежийг шалгах
+        const errorMsg = data.error || data.message || '';
+        if (errorMsg.toLowerCase().includes('already registered') || errorMsg.toLowerCase().includes('already exists')) {
+          setError('Энэ мэйл хаяг аль хэдийн бүртгэгдсэн байна. Та нэвтэрч орно уу.');
+        } else {
+          setError(errorMsg || 'Бүртгэхэд алдаа гарлаа. Дахин оролдоно уу.');
+        }
+        setIsSubmitting(false);
+        return;
       }
-    } catch {
-      console.warn('Network error or missing API route, continuing with local flow.');
+
+      // Амжилттай бүртгэгдсэн бол капча / шалгах шатанд шилжинэ
+      setStep('captcha');
+    } catch (err: any) {
+      console.warn('Network error or missing API route, continuing with local flow.', err);
+      // Сүлжээний алдаа гарсан үед ч локал урсгалаар үргэлжлүүлэх эсвэл алдаа заах
+      setStep('captcha');
     } finally {
       setIsSubmitting(false);
-      setStep('captcha');
     }
   };
 
@@ -188,18 +201,24 @@ export default function CopyTradingPage() {
     setIsSubmitting(true);
     try {
       const verifyEndpoint = mode === 'Email' ? '/api/auth/verify-email' : '/api/auth/verify-mobile';
-      await fetch(verifyEndpoint, { 
+      const res = await fetch(verifyEndpoint, { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' }, 
         body: JSON.stringify({ contact: contact.trim(), code: otp }) 
-      }).catch(() => {});
+      });
+      
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data.error || 'Баталгаажуулахад алдаа гарлаа.');
+        setIsSubmitting(false);
+        return;
+      }
       
       setError('');
       setStep('complete');
       window.setTimeout(() => router.push('/login'), 700);
-    } catch {
-      setStep('complete');
-      window.setTimeout(() => router.push('/login'), 700);
+    } catch (err: any) {
+      setError(err?.message || 'Сервертэй холбогдоход алдаа гарлаа.');
     } finally {
       setIsSubmitting(false);
     }
@@ -266,7 +285,7 @@ export default function CopyTradingPage() {
           {step === 'captcha' && <div><h2>Confirm you are human</h2><p style={{ color: colors.muted }}>Arrange the tiles in the correct order.</p><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 64px)', gap: '8px', justifyContent: 'center', margin: '24px 0' }}>{puzzle.map((tile, index) => <button key={index} type="button" onClick={() => setPuzzle(moveTile(puzzle, index))} style={{ width: '64px', height: '64px', background: tile ? '#166534' : colors.page, color: '#fff', fontSize: '20px' }}>{tile || ''}</button>)}</div><button type="button" disabled={!puzzleSolved} onClick={sendCode} style={{ width: '100%', padding: '12px', color: puzzleSolved ? '#16a34a' : colors.muted }}>{isSending ? 'Sending code...' : mode === 'Mobile' ? 'Get SMS verification code' : 'Get verification code'}</button></div>}
           {step === 'otp' && <div><h2>Verify your account</h2><p style={{ color: colors.muted }}>{mode === 'Mobile' ? `A 4-digit SMS code has been sent to ${contact}.` : 'A 4-digit code has been sent.'}</p><input aria-label="4-digit verification code" inputMode="numeric" maxLength={4} placeholder="0000" value={otp} onChange={(event) => setOtp(event.target.value.replace(/\D/g, ''))} style={{ ...inputStyle, fontSize: '24px', letterSpacing: '8px', textAlign: 'center' }} /><button type="button" onClick={verifyCode} disabled={otp.length !== 4} style={{ width: '100%', padding: '12px', color: otp.length === 4 ? '#16a34a' : colors.muted }}>{isSubmitting ? 'Verifying...' : 'Complete registration'}</button>{isDevelopment && <small>Development code: {sentCode}</small>}</div>}
           {step === 'complete' && <div style={{ textAlign: 'center', padding: '44px 0' }}><div style={{ fontSize: '52px', color: '#16a34a' }}>✓</div><h2>Registration complete</h2></div>}
-          {error && <p role="alert" style={{ color: '#dc2626', fontSize: '13px' }}>{error}</p>}
+          {error && <p role="alert" style={{ color: '#dc2626', fontSize: '13px', marginTop: '10px' }}>{error}</p>}
         </div>
       </section>
       <style>{`

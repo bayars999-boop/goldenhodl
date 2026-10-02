@@ -123,7 +123,7 @@ export default function LoginPage() {
       {step === 'new-password' && <><h1 style={{ textAlign: 'center', fontSize: '24px' }}>Create new password</h1><input aria-label="New password" placeholder="New password (8+ characters)" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} style={input} /><button type="button" onClick={savePassword} disabled={busy} style={{ width: '100%', padding: '11px', border: 0, borderRadius: '4px', background: '#16a34a', color: '#fff', fontWeight: 700, opacity: busy ? 0.7 : 1 }}>{busy ? 'Saving…' : 'Save password'}</button></>}
       {error && <p role="alert" style={{ color: '#fb7185', fontSize: '13px', marginTop: '14px' }}>{error}</p>}
       {notice && !error && <p role="status" style={{ color: '#16a34a', fontSize: '13px', marginTop: '14px' }}>{notice}</p>}
-      <a href="/signin" style={{ display: 'block', textAlign: 'center', marginTop: '22px', color: '#0284c7', fontSize: '13px' }}>Create an account</a>
+      <a href="/signup" style={{ display: 'block', textAlign: 'center', marginTop: '22px', color: '#0284c7', fontSize: '13px' }}>Create an account</a>
     </section>
   </main>;
 }
