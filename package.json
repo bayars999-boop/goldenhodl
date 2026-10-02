@@ -13,10 +13,13 @@
     "ci": "npm run check:privacy-matrix && npm run check:data-location && npm run check:security-controls && npm run lint && npm run build"
   },
   "dependencies": {
+    "@google-cloud/vertexai": "^1.12.0",
+    "@google/genai": "^2.26.0",
     "@supabase/ssr": "^0.12.7",
     "@types/bcrypt": "^6.0.0",
     "bcrypt": "^6.0.0",
     "next": "16.3.4",
+    "openai": "^7.27.0",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
